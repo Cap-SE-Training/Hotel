@@ -9,6 +9,8 @@ public class Address {
     private String city;
     private String country;
 
+    public Address() { }
+
     public Address(String street, String houseNumber, String postalCode, String city, String country) {
         //id automatisch genereren
         this.street = street;
