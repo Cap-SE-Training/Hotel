@@ -10,15 +10,15 @@ public class Room {
     private int size;
     private long id;
     private double price;
-    
+
     public Room(){}
 
-    public Room(RoomStatus roomStatus, String number, RoomType roomType, int size, double price) {
-        this.roomStatus = roomStatus;
+    public Room(String number, RoomType roomType, int size, double price) {
         this.number = number;
         this.roomType = roomType;
         this.size = size;
         this.price = price;
+        this.roomStatus = RoomStatus.AVAILABLE;
     }
 
     public RoomStatus getRoomStatus() {
