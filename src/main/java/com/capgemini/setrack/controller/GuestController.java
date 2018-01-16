@@ -25,14 +25,14 @@ public class GuestController {
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
     public void deleteGuest(@PathVariable long id) {
-        Guest guestToRemove = null;
+
         for (Guest guest : this.guestRepository.guests) {
             if (guest.getId() == id) {
-                guestToRemove = guest;
-
+                this.guestRepository.guests.remove(guest);
+                break;
             }
         }
-        if(guestToRemove!=null)
-            this.guestRepository.guests.remove(guestToRemove);
+
+
     }
 }

@@ -7,26 +7,24 @@ public class Guest {
     private String lastName;
     private Address address;
     private String email;
-    private String phonenumber;
+    private String telephoneNumber;
 
     public Guest(){
 
     }
 
-    public Guest(long id, String firstName, String lastName, String email) {
-        this.id = id;
+    public Guest(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public Guest(long id, String firstName, String lastName, Address address, String email, String phonenumber) {
-        this.id = id;
+    public Guest(String firstName, String lastName, Address address, String email, String telephoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.email = email;
-        this.phonenumber = phonenumber;
+        this.telephoneNumber = telephoneNumber;
     }
 
 
@@ -71,11 +69,11 @@ public class Guest {
         this.email = email;
     }
 
-    public String getPhonenumber() {
-        return phonenumber;
+    public String getTelephoneNumber() {
+        return telephoneNumber;
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 }

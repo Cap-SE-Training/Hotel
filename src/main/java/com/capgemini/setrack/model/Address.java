@@ -4,15 +4,15 @@ public class Address {
 
     private long id;
     private String street;
-    private String housenumber;
+    private String houseNumber;
     private String postalCode;
     private String city;
     private String country;
 
-    public Address(long id, String street, String housenumber, String postalCode, String city, String country) {
+    public Address(String street, String houseNumber, String postalCode, String city, String country) {
         //id automatisch genereren
         this.street = street;
-        this.housenumber = housenumber;
+        this.houseNumber = houseNumber;
         this.postalCode = postalCode;
         this.city = city;
         this.country = country;
@@ -26,12 +26,12 @@ public class Address {
         this.street = street;
     }
 
-    public String getHousenumber() {
-        return housenumber;
+    public String getHouseNumber() {
+        return houseNumber;
     }
 
-    public void setHousenumber(String housenumber) {
-        this.housenumber = housenumber;
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
     }
 
     public String getPostalCode() {
