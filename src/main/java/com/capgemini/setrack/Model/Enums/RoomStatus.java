@@ -2,7 +2,7 @@ package com.capgemini.setrack.Model.Enums;
 
 public enum RoomStatus {
 
-    AVALIABLE,
+    AVAILABLE,
     TAKEN,
     BLOCKED
 }
