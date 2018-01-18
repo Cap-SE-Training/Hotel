@@ -1,6 +1,6 @@
-package com.capgemini.setrack.Model;
+package com.capgemini.setrack.model;
 
-import com.capgemini.setrack.Model.Enums.RoomStatus;
+import com.capgemini.setrack.model.enums.RoomStatus;
 
 public class Room {
 

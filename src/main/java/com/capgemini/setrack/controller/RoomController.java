@@ -1,6 +1,6 @@
 package com.capgemini.setrack.controller;
 
-import com.capgemini.setrack.Model.Room;
+import com.capgemini.setrack.model.Room;
 import com.capgemini.setrack.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

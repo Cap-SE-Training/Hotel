@@ -1,6 +1,6 @@
 package com.capgemini.setrack.repository;
 
-import com.capgemini.setrack.Model.Room;
+import com.capgemini.setrack.model.Room;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

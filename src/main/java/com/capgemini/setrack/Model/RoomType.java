@@ -1,4 +1,4 @@
-package com.capgemini.setrack.Model;
+package com.capgemini.setrack.model;
 
 public class RoomType {
 
