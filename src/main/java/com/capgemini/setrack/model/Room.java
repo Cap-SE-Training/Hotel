@@ -14,7 +14,7 @@ public class Room {
 
     public Room(){}
 
-    public Room(String name,String number, RoomType roomType, int size, double price) {
+    public Room(String name, String number, RoomType roomType, int size, double price) {
         this.name = name;
         this.number = number;
         this.roomType = roomType;

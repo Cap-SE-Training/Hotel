@@ -3,13 +3,17 @@ var tableElement;
 var selectedId;
 
 $(document).ready(function() {
-    tableElement = $('#personsTable');
+    tableElement = $('#roomsTable');
     table = tableElement.DataTable({
         bLengthChange: false,
         rowId: 'id',
         columns: [
+            { "data": "roomStatus" },
             { "data": "name" },
-            { "data": "age" }
+            { "data": "number" },
+            { "data": "roomType.type" },
+            { "data": "size" },
+            { "data": "price" }
         ]
     });
     tableElement.on('click', 'tr', function() {
@@ -30,7 +34,7 @@ $(document).ready(function() {
 
     $('#remove').on('click', function(event) {
         bootbox.confirm({
-            message: "Are you sure you want to delete this person?",
+            message: "Are you sure you want to delete this room?",
             buttons: {
                 confirm: {
                     label: 'Yes',
@@ -42,27 +46,37 @@ $(document).ready(function() {
                 }
             },
             callback: function(result) {
-                var person = table.row('#' + selectedId).data();
-                console.log(person);
-                removePerson(person, function() {
-                    toastr.success('Removed "' + person.name + '" from Persons!');
+                var room = table.row('#' + selectedId).data();
+                console.log(room);
+                removeRoom(room, function() {
+                    toastr.success('Removed "' + room.name + '" from Rooms!');
                     updateTable();
                 }, handleError);
             }
         });
     });
-    $('#addPerson').submit(function(event) {
+    $('#addRoom').submit(function(event) {
         event.preventDefault();
-        $('#addPersonModal').modal('hide');
+
+        $('#addRoomModal').modal('hide');
 
         var data = {
+            roomStatus: $('#status').val(),
             name: $('#name').val(),
-            age: $('#age').val()
+            number: $('#number').val(),
+            roomType: {
+                id: $('#type').val(),
+                type: $('#type option:selected').text()
+            },
+            size: $('#size').val(),
+            price: $('#price').val()
         };
 
-        createPerson(data, function(result) {
-           toastr.success('Added "' + data.name + '" to Persons!');
-           $('#addPerson').get(0).reset();
+        console.log(data);
+        createRoom(data, function(result) {
+           toastr.success('Added "' + data.name + '" to Rooms!');
+           console.log(result);
+           $('#addRoom').get(0).reset();
            updateTable();
         }, handleError);
     });
@@ -73,11 +87,11 @@ function handleError(error) {
     console.log(error);
 };
 
-function createPerson(person, successCallback, errorCallback) {
+function createRoom(room, successCallback, errorCallback) {
     $.ajax({
         contentType: 'application/json',
-        url: '/api/person/add',
-        data: JSON.stringify(person),
+        url: '/api/rooms/create',
+        data: JSON.stringify(room),
         type: 'POST',
         dataType: 'json',
         success: successCallback,
@@ -85,12 +99,11 @@ function createPerson(person, successCallback, errorCallback) {
     });
 }
 
-function removePerson(person, successCallback, errorCallback) {
+function removeRoom(room, successCallback, errorCallback) {
     $.ajax({
         contentType: 'application/json',
-        url: '/api/person/delete',
-        data: JSON.stringify(person),
-        type: 'POST',
+        url: '/api/rooms/delete/' + room.id,
+        type: 'DELETE',
         success: successCallback,
         error: errorCallback
     });
@@ -98,9 +111,9 @@ function removePerson(person, successCallback, errorCallback) {
 
 function updateTable() {
     $('button.controls').prop('disabled', selectedId === undefined);
-    $.get('/api/person/all', function(persons) {
+    $.get('/api/rooms/', function(rooms) {
         table.clear();
-        table.rows.add(persons);
+        table.rows.add(rooms);
         table.columns.adjust().draw();
     });
 }
