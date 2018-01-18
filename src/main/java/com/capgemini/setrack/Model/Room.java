@@ -5,6 +5,7 @@ import com.capgemini.setrack.Model.Enums.RoomStatus;
 public class Room {
 
     private RoomStatus roomStatus;
+    private String name;
     private String number;
     private RoomType roomType;
     private int size;
@@ -13,7 +14,8 @@ public class Room {
 
     public Room(){}
 
-    public Room(String number, RoomType roomType, int size, double price) {
+    public Room(String name,String number, RoomType roomType, int size, double price) {
+        this.name = name;
         this.number = number;
         this.roomType = roomType;
         this.size = size;
@@ -39,6 +41,14 @@ public class Room {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public RoomType getRoomType() {
