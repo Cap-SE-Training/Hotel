@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/guest/")
+@RequestMapping("/api/guests/")
 public class GuestController {
 
     @Autowired
@@ -20,12 +20,10 @@ public class GuestController {
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public void createGuest(@RequestBody Guest guest){
         this.guestRepository.guests.add(guest);
-
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
     public void deleteGuest(@PathVariable long id) {
-
         for (Guest guest : this.guestRepository.guests) {
             if (guest.getId() == id) {
                 this.guestRepository.guests.remove(guest);
