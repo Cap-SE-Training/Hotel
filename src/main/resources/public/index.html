@@ -74,9 +74,15 @@
                 <div id="filters" class="collapse">
                     <b>Status</b>
                     </hr>
-                    <div id="statusAvailable" onclick="setStatus('Available')">Available</div>
-                    <div id="statusTaken" onclick="setStatus('Taken')">Taken</div>
-                    <div id="statusBlocked" onclick="setStatus('Blocked')">Blocked</div>
+                    <div class="checkbox-status">
+                        <label> <input type="checkbox" value="AVAILABLE" id="available" checked>Available</label>
+                    </div>
+                    <div class="checkbox-status">
+                    <label> <input type="checkbox" value="TAKEN" id="taken" checked>Taken</label>
+                </div>
+                    <div class="checkbox-status">
+                        <label> <input type="checkbox" value="BLOCKED" id="blocked" checked>Blocked</label>
+                    </div>
                     <input id="roomStatus" type="hidden" value="">
                 </div>
                 <table class="table table-bordered" id="roomsTable">
