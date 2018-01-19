@@ -2,61 +2,144 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Guest</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <title>Hello World</title>
+
+    <!-- JQuery -->
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="/css/bootstrap-litera.min.css">
+    <!--<link rel="stylesheet" href="/css/bootstrap-journal.min.css">-->
+    <!--<link rel="stylesheet" href="/css/bootstrap-sketchy.min.css">-->
+    <!--<link rel="stylesheet" href="/css/bootstrap-cosmo.min.css">-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+
+    <!-- Toastr -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/cb275ec490.js"></script>
+
+    <!-- Bootbox -->
+    <script src="/js/libraries/bootbox.min.js"></script>
+
+    <!-- Toastr Config -->
+    <script src="/js/toastr.js"></script>
+
+    <script src="/js/rooms.js"></script>
 </head>
 <body>
-<button type="button" data-toggle="modal" data-target="#newGuestModal">New Guest</button>
-<div class="container">
-    <div class=“row”>
-        <div class=“col-md-12”>
-            <h2>Guests</h2>
-            <table id="table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <!--<th>Address</th>-->
-                    <th>Email</th>
-                    <th>Telephone Number</th>
-                </tr>
-                </thead>
-            </table>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-10">
+        <a class="navbar-brand" href="#">Rooms</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Rooms</a>
+                </li>
+            </ul>
         </div>
-    </div>
-</div>
-
-<div id="newGuestModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Content-->
-        <div class="modal-content">
-            <div class="modal-body">
-
-                <form id="newGuestForm" onsubmit="return false;">
-                    <label for="firstName">First Name</label>
-                    <input id="firstName" name="firstName" type="text" placeholder="John">
-                    <label for="lastName">Last Name</label>
-                    <input id="lastName" name="lastName" type="text" placeholder="Smith">
-                    <label for="email">E-mail</label>
-                    <input id="email" name="email" type="text" placeholder="abc@gmail.com">
-                    <label for="telephoneNumber">Telephone number</label>
-                    <input id="telephoneNumber" name="telephoneNumber" type="text" placeholder="061234567">
-
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </form>
+    </nav>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRoomModal">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn btn-primary controls" disabled>
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger controls" id="remove" disabled>
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <table class="table table-bordered" id="roomsTable">
+                    <thead>
+                    <tr>
+                        <th scope="col">Status</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Number</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
-
     </div>
-</div>
-<script
-        src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="js/guests.js"></script>
+
+    <div class="modal fade" id="addRoomModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add a room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addRoom">
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="0">Available</option>
+                                <option value="1">Taken</option>
+                                <option value="2">Blocked</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Number</label>
+                            <input type="text" class="form-control" id="number" name="number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Type</label>
+                            <select class="form-control" id="type" name="type" required>
+                                <option value="0">Basic</option>
+                                <option value="1">Comfort</option>
+                                <option value="2">Luxe</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="size">Size</label>
+                            <input type="number" class="form-control" id="size" name="size" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control" id="price" name="price" required>
+                        </div>
+                        <input type="submit" id="addRoomSubmit" style="display: none;">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="$('#addRoomSubmit').click();">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
