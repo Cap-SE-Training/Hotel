@@ -32,6 +32,7 @@ $(document).ready(function() {
     });
     updateTable();
 
+
     $('#remove').on('click', function(event) {
         bootbox.confirm({
             message: "Are you sure you want to delete this room?",
@@ -117,3 +118,22 @@ function updateTable() {
         table.columns.adjust().draw();
     });
 }
+
+
+function setStatus(status){
+    $('#roomStatus').val(status);
+    table.draw();
+}
+
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var value = $('#roomStatus').val().toLowerCase();
+        var status = data[0].toLowerCase();
+
+        if (!value || (status === value))
+        {
+            return true;
+        }
+        return false;
+    }
+);
