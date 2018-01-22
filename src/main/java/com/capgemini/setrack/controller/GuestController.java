@@ -30,7 +30,5 @@ public class GuestController {
                 break;
             }
         }
-
-
     }
 }
