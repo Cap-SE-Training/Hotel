@@ -3,6 +3,13 @@ var tableElement;
 var selectedId;
 
 $(document).ready(function() {
+        console.log('??');
+    getRoomTypes(function(result) {
+        result.forEach(function(roomType) {
+            $('#type').append('<option value=' + roomType.id + '>' + roomType.type + '</option>');
+        });
+        console.log(result);
+    });
     tableElement = $('#roomsTable');
     table = tableElement.DataTable({
         bLengthChange: false,
@@ -62,10 +69,7 @@ $(document).ready(function() {
             roomStatus: $('#status').val(),
             name: $('#name').val(),
             number: $('#number').val(),
-            roomType: {
-                id: $('#type').val(),
-                type: $('#type option:selected').text()
-            },
+            roomType: $('#type').val(),
             size: $('#size').val(),
             price: $('#price').val()
         };
@@ -84,6 +88,17 @@ function handleError(error) {
     toastr.success('Something bad happened');
     console.log(error);
 };
+
+function getRoomTypes(successCallback, errorCallback) {
+    $.ajax({
+        contentType: 'application/json',
+        url: '/api/room_types/all',
+        type: 'GET',
+        dataType: 'json',
+        success: successCallback,
+        error: errorCallback
+    });
+}
 
 function createRoom(room, successCallback, errorCallback) {
     $.ajax({
