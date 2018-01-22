@@ -14,19 +14,19 @@ public class GuestController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public Iterable<Guest> getAllGuests(){
-        return this.guestRepository.guests;
+        return this.guestRepository.getGuests();
     }
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public void createGuest(@RequestBody Guest guest){
-        this.guestRepository.guests.add(guest);
+        this.guestRepository.getGuests().add(guest);
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
     public void deleteGuest(@PathVariable long id) {
-        for (Guest guest : this.guestRepository.guests) {
+        for (Guest guest : this.guestRepository.getGuests()) {
             if (guest.getId() == id) {
-                this.guestRepository.guests.remove(guest);
+                this.guestRepository.getGuests().remove(guest);
                 break;
             }
         }
