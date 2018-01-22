@@ -30,6 +30,13 @@ $(document).ready(function() {
 
         $('button.controls').prop('disabled', selectedId === undefined);
     });
+    $('.checkbox-status').on('click', function(event) {
+        table.draw();
+    });
+    $('.input-price').on('keyup', function() {
+         table.draw();
+    });
+
     updateTable();
 
 
@@ -119,19 +126,12 @@ function updateTable() {
     });
 }
 
-
-function setStatus(status){
-    $('#roomStatus').val(status);
-    table.draw();
-}
-
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
-        var value = $('#roomStatus').val().toLowerCase();
         var status = data[0].toLowerCase();
+        var price = data[5];
 
-        if (!value || (status === value))
-        {
+        if ($('#' + status).is(":checked") && parseInt($('#fromPrice').val()) <= price && parseInt($('#toPrice').val()) >= price) {
             return true;
         }
         return false;
