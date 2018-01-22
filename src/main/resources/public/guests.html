@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Guest</title>
+    <title>Hotel - Guests</title>
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -45,11 +45,14 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/guests.html">Guests</a>
+            </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Guests</a>
+                <a class="nav-link" href="/rooms.html">Rooms</a>
             </li>
         </ul>
     </div>
@@ -68,7 +71,6 @@
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </div>
-            <h2>Guests</h2>
             <table id="table" class="table table-bordered">
                 <thead>
                 <tr>
@@ -97,19 +99,19 @@
                 <form id="newGuestForm" onsubmit="return false;">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input id="firstName" name="firstName" type="text" placeholder="John">
+                        <input id="firstName" class="form-control" name="firstName" type="text" placeholder="John">
                     </div>
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input id="lastName" name="lastName" type="text" placeholder="Smith">
+                        <input id="lastName" class="form-control" name="lastName" type="text" placeholder="Smith">
                     </div>
                     <div class="form-group">
                         <label for="email">E-mail</label>
-                        <input id="email" name="email" type="text" placeholder="abc@gmail.com">
+                        <input id="email" class="form-control" name="email" type="text" placeholder="abc@gmail.com">
                     </div>
                     <div class="form-group">
                         <label for="telephoneNumber">Telephone number</label>
-                        <input id="telephoneNumber" name="telephoneNumber" type="text" placeholder="061234567">
+                        <input id="telephoneNumber" class="form-control" name="telephoneNumber" type="text" placeholder="061234567">
                     </div>
                     <input type="submit" id="addGuestSubmit" style="display: none;">
                 </form>

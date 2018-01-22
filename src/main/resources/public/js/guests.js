@@ -6,6 +6,7 @@ console.log("document ready")
     // Load DataTable with data format.
    table =  $('#table').DataTable({
         rowId: 'id',
+        bLengthChange: false,
         columns: [
            { "data": function( data, type, row ){
                 return data.firstName + " " + data.lastName;
