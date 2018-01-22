@@ -17,10 +17,8 @@ $(document).ready(function() {
         ]
     });
     tableElement.on('click', 'tr', function() {
-        $(tableElement).find('tr.selected').each(function() {
-            $(this).removeClass('selected');
-        });
-        var id = table.row( this ).id();
+        $(tableElement).find('tr.selected').removeClass('selected');
+        var id = table.row(this).id();
         if (id !== selectedId) {
             $(this).addClass('selected');
             selectedId = table.row( this ).id();
