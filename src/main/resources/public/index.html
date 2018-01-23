@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World</title>
-
-    <!-- JQuery -->
+    <title>Hotel - Home</title>
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -36,140 +34,30 @@
     <!-- Toastr Config -->
     <script src="/js/toastr.js"></script>
 
-    <script src="/js/rooms.js"></script>
+    <script src="/js/guests.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-10">
-        <a class="navbar-brand" href="#">Rooms</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-10">
+    <a class="navbar-brand" href="#">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Rooms</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRoomModal">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-primary controls" disabled>
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" class="btn btn-danger controls" id="remove" disabled>
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <a href="#filterMenu" class="btn btn-info" data-toggle="collapse"><i class="fa fa-filter" aria-hidden="true"></i></a>
-                <div id="filterMenu" class="collapse">
-                    <div id="filters" class="row">
-                        <div class="col-lg-8" id="typeFilter">
-                            <b>Status</b>
-                            </hr>
-                            <div class="checkbox-status">
-                                <label> <input type="checkbox" value="AVAILABLE" id="available" checked>Available</label>
-                            </div>
-                            <div class="checkbox-status">
-                                <label> <input type="checkbox" value="TAKEN" id="taken" checked>Taken</label>
-                            </div>
-                            <div class="checkbox-status">
-                                <label> <input type="checkbox" value="BLOCKED" id="blocked" checked>Blocked</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4" id="priceFilter">
-                            <b>Prize</b>
-                            </hr>
-                            <div class="form-group">
-                                <label for="number">From</label>
-                                <input type="number" class="input-price form-control" id="fromPrice" name="fromPrice" value="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="number">To</label>
-                                <input type="number" class="input-price form-control" id="toPrice" name="toPrice" value="1000">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <table class="table table-bordered" id="roomsTable">
-                    <thead>
-                    <tr>
-                        <th scope="col">Status</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Number</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Price</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/guests.html">Guests</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/rooms.html">Rooms</a>
+            </li>
+        </ul>
     </div>
-
-    <div class="modal fade" id="addRoomModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add a room</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addRoom">
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="0">Available</option>
-                                <option value="1">Taken</option>
-                                <option value="2">Blocked</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="number">Number</label>
-                            <input type="text" class="form-control" id="number" name="number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="type">Type</label>
-                            <select class="form-control" id="type" name="type" required>
-                                <option value="0">Basic</option>
-                                <option value="1">Comfort</option>
-                                <option value="2">Luxe</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="size">Size</label>
-                            <input type="number" class="form-control" id="size" name="size" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" required>
-                        </div>
-                        <input type="submit" id="addRoomSubmit" style="display: none;">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="$('#addRoomSubmit').click();">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</nav>
+<div class="container mt-5">
+</div>
 </body>
 </html>
