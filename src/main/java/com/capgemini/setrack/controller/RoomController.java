@@ -1,9 +1,14 @@
 package com.capgemini.setrack.controller;
 
 import com.capgemini.setrack.model.Room;
+import com.capgemini.setrack.model.RoomType;
 import com.capgemini.setrack.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rooms/")
@@ -30,5 +35,16 @@ public class RoomController {
                 break;
             }
         }
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.GET)
+    public Iterable<Room> getAvailableRooms(
+            @RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date fromDate,
+            @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date toDate,
+            @RequestParam("size") int size,
+            @RequestParam("roomType") RoomType roomType) {
+        //TODO: Use from and for booking logic to check if room is available
+        List<Room> rooms = this.roomRepository.findBySizeGreaterThanEqualAndRoomTypeOrderBySizeAsc(size, roomType);
+        return rooms;
     }
 }
