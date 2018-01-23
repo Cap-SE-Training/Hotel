@@ -25,7 +25,7 @@ public class Room {
     @JoinTable(name = "booking_room", joinColumns = {
             @JoinColumn(name = "roomid", referencedColumnName = "id") }, inverseJoinColumns = {
             @JoinColumn(name = "bookingid", referencedColumnName = "id") })
-    private List<Booking> fkBookings;
+    private List<Booking> bookings;
 
     public Room(){}
 
@@ -36,6 +36,14 @@ public class Room {
         this.size = size;
         this.price = price;
         this.roomStatus = RoomStatus.AVAILABLE;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
 
     public RoomStatus getRoomStatus() {

@@ -25,11 +25,11 @@ public class BookingController {
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
     public void deleteBooking(@PathVariable long id) {
-//        for (Booking booking : this.bookingRepository.findAll()) {
-//            if (booking.getId() == id) {
-//                this.bookingRepository.delete(booking);
-//                break;
-//            }
-//        }
+        for (Booking booking : this.bookingRepository.findAll()) {
+            if (booking.getId() == id) {
+                this.bookingRepository.delete(booking);
+                break;
+            }
+        }
     }
 }

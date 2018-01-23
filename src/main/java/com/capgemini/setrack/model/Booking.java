@@ -1,9 +1,9 @@
 package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.PaymentMethod;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,13 +24,13 @@ public class Booking {
     private LocalDateTime paid;
     private PaymentMethod paymentMethod;
 
-    @ManyToMany(mappedBy = "fkBookings")
-    private List<Room> fkRooms;
+    @ManyToMany(mappedBy = "bookings")
+    private List<Room> rooms;
 
     public Booking() {}
 
-    public Booking(List<Room> fkRooms, long guestId, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime checkedIn, PaymentMethod paymentMethod) {
-        this.fkRooms = fkRooms; //rooms must be selected
+    public Booking(List<Room> rooms, long guestId, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime checkedIn, PaymentMethod paymentMethod) {
+        this.rooms = rooms; //rooms must be selected
         this.guestId = guestId;//guestId must be selected
         this.startDate = startDate;
         this.endDate = endDate;
@@ -53,11 +53,11 @@ public class Booking {
     }
 
     public List<Room> getFkRooms() {
-        return fkRooms;
+        return rooms;
     }
 
     public void setFkRooms(List<Room> fkRooms) {
-        this.fkRooms = fkRooms;
+        this.rooms = fkRooms;
     }
 
     public long getGuestId() {
