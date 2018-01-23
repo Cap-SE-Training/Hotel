@@ -3,12 +3,19 @@ var tableElement;
 var selectedId;
 
 $(document).ready(function() {
-        console.log('??');
     getRoomTypes(function(result) {
         result.forEach(function(roomType) {
             $('#type').append('<option value=' + roomType.id + '>' + roomType.type + '</option>');
+            $('#filterType').append('<div onclick="table.draw()"><label> <input type="checkbox" value="' + roomType.id
+                + '" id="' + roomType.type + '" checked>' + roomType.type + '</label></div>');
         });
         console.log(result);
+    });
+    getRoomSizes(function(result) {
+        result.forEach(function(size) {
+            $('#filterSize').append('<div onclick="table.draw()"><label> <input type="checkbox" value="' + size
+                            + '" id="size-' + size + '" checked>' + size + '</label></div>');
+        });
     });
     tableElement = $('#roomsTable');
     table = tableElement.DataTable({
@@ -34,12 +41,6 @@ $(document).ready(function() {
         }
 
         $('button.controls').prop('disabled', selectedId === undefined);
-    });
-    $('.checkbox-status').on('click', function(event) {
-        table.draw();
-    });
-    $('.input-price').on('keyup', function() {
-         table.draw();
     });
 
     updateTable();
@@ -110,6 +111,17 @@ function getRoomTypes(successCallback, errorCallback) {
     });
 }
 
+function getRoomSizes(successCallback, errorCallback) {
+    $.ajax({
+        contentType: 'application/json',
+        url: '/api/rooms/sizes',
+        type: 'GET',
+        dataType: 'json',
+        success: successCallback,
+        error: errorCallback
+    });
+}
+
 function createRoom(room, successCallback, errorCallback) {
     $.ajax({
         contentType: 'application/json',
@@ -144,9 +156,11 @@ function updateTable() {
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
         var status = data[0].toLowerCase();
+        var type = data[3];
         var price = data[5];
+        var size = data[4];
 
-        if ($('#' + status).is(":checked") && parseInt($('#fromPrice').val()) <= price && parseInt($('#toPrice').val()) >= price) {
+        if ($('#' + status).is(":checked") && $('#' + type).is(":checked") && $('#size-' + size).is(":checked")) {
             return true;
         }
         return false;
