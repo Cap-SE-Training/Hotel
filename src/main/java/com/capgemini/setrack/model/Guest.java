@@ -1,10 +1,17 @@
 package com.capgemini.setrack.model;
 
+import javax.persistence.*;
+
+@Entity
 public class Guest {
 
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
     private String firstName;
     private String lastName;
+
+    @OneToOne(mappedBy="guest")
     private Address address;
     private String email;
     private String telephoneNumber;
