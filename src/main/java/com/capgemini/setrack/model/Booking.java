@@ -15,6 +15,7 @@ public class Booking {
     private long id;
 
     //private long roomId;
+
     private long guestId;
 
     private LocalDateTime startDate;
@@ -52,12 +53,12 @@ public class Booking {
         this.guestId = guestId;
     }
 
-    public List<Room> getFkRooms() {
+    public List<Room> getRooms() {
         return rooms;
     }
 
-    public void setFkRooms(List<Room> fkRooms) {
-        this.rooms = fkRooms;
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     public long getGuestId() {
