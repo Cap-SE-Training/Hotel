@@ -1,8 +1,17 @@
 package com.capgemini.setrack.model;
 
-public class Address {
+import javax.persistence.*;
 
+@Entity
+public class Address {
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
+
+    @OneToOne
+    @JoinColumn(name="guest_id")
+    private Guest guest;
+
     private String street;
     private String houseNumber;
     private String postalCode;
@@ -18,6 +27,14 @@ public class Address {
         this.postalCode = postalCode;
         this.city = city;
         this.country = country;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getStreet() {
@@ -58,5 +75,13 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
     }
 }

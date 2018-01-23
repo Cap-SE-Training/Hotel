@@ -2,14 +2,22 @@ package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.RoomStatus;
 
+import javax.persistence.*;
+
+@Entity
 public class Room {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name="room_type_id")
+    private RoomType roomType;
 
     private RoomStatus roomStatus;
     private String name;
     private String number;
-    private RoomType roomType;
     private int size;
-    private long id;
     private double price;
 
     public Room(){}
@@ -29,6 +37,10 @@ public class Room {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public void setRoomStatus(RoomStatus roomStatus) {

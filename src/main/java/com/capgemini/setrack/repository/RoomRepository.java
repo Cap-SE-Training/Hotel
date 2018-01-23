@@ -1,13 +1,6 @@
 package com.capgemini.setrack.repository;
 
 import com.capgemini.setrack.model.Room;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Repository
-public class RoomRepository {
-
-    public List<Room> rooms = new ArrayList<Room>();
-}
+public interface RoomRepository extends CrudRepository<Room, Long> {}

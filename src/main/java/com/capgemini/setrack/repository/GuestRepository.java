@@ -1,13 +1,6 @@
 package com.capgemini.setrack.repository;
 
 import com.capgemini.setrack.model.Guest;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Repository
-public class GuestRepository {
-
-    public List<Guest> guests = new ArrayList<Guest>();
-}
+public interface GuestRepository extends CrudRepository<Guest, Long> {}
