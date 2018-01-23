@@ -72,6 +72,41 @@
                     <button type="button" class="btn btn-danger controls" id="remove" disabled>
                         <i class="fa fa-trash" aria-hidden="true"></i>
                     </button>
+                    <a href="#filterMenu" class="btn btn-info" data-toggle="collapse">
+                        <i class="fa fa-filter" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <div id="filterMenu" class="collapse">
+                    </hr>
+                    <div id="filters" class="row">
+                        <div class="col-lg-4" id="typeFilter">
+                            <b>Status</b>
+                            </hr>
+                            <div onclick="table.draw()">
+                                <label> <input type="checkbox" value="AVAILABLE" id="available" checked>Available</label>
+                            </div>
+                            <div onclick="table.draw()">
+                                <label> <input type="checkbox" value="TAKEN" id="taken" checked>Taken</label>
+                            </div>
+                            <div onclick="table.draw()">
+                                <label> <input type="checkbox" value="BLOCKED" id="blocked" checked>Blocked</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" id="statusFilter">
+                            <b>Type</b>
+                            </hr>
+                            <div id="filterType">
+                            </div>
+                        </div>
+                        <div class="col-lg-4" id="sizeFilter">
+                            <b>Size</b>
+                            </hr>
+                            <div id="filterSize">
+                            </div>
+                        </div>
+                    </div>
+                    </hr>
                 </div>
                 <table class="table table-bordered" id="roomsTable">
                     <thead>
