@@ -69,7 +69,9 @@ $(document).ready(function() {
             roomStatus: $('#status').val(),
             name: $('#name').val(),
             number: $('#number').val(),
-            roomType: $('#type').val(),
+            roomType: {
+                id: $('#type').val()
+            },
             size: $('#size').val(),
             price: $('#price').val()
         };
