@@ -3,6 +3,7 @@ package com.capgemini.setrack.model;
 import com.capgemini.setrack.model.enums.RoomStatus;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Room {
@@ -20,6 +21,12 @@ public class Room {
     private int size;
     private double price;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "booking_room", joinColumns = {
+            @JoinColumn(name = "roomid", referencedColumnName = "id") }, inverseJoinColumns = {
+            @JoinColumn(name = "bookingid", referencedColumnName = "id") })
+    private List<Booking> bookings;
+
     public Room(){}
 
     public Room(String name, String number, RoomType roomType, int size, double price) {
@@ -29,6 +36,14 @@ public class Room {
         this.size = size;
         this.price = price;
         this.roomStatus = RoomStatus.AVAILABLE;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
 
     public RoomStatus getRoomStatus() {

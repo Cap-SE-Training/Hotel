@@ -1,14 +1,23 @@
 package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.PaymentMethod;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Entity
 public class Booking {
 
-    private long roomId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    //private long roomId;
+
     private long guestId;
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private LocalDateTime checkedIn;
@@ -16,11 +25,13 @@ public class Booking {
     private LocalDateTime paid;
     private PaymentMethod paymentMethod;
 
+    @ManyToMany(mappedBy = "bookings")
+    private List<Room> rooms;
 
     public Booking() {}
 
-    public Booking(long roomId, long guestId, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime checkedIn, PaymentMethod paymentMethod) {
-        this.roomId = roomId; //roomId must be selected
+    public Booking(List<Room> rooms, long guestId, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime checkedIn, PaymentMethod paymentMethod) {
+        this.rooms = rooms; //rooms must be selected
         this.guestId = guestId;//guestId must be selected
         this.startDate = startDate;
         this.endDate = endDate;
@@ -30,8 +41,24 @@ public class Booking {
         //paid is not required to be done at the start of a booking
     }
 
-    public long getRoomId() {
-        return roomId;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setGuestId(long guestId) {
+        this.guestId = guestId;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     public long getGuestId() {
