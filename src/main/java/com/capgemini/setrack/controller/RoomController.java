@@ -3,6 +3,7 @@ package com.capgemini.setrack.controller;
 import com.capgemini.setrack.model.Room;
 import com.capgemini.setrack.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,5 +31,10 @@ public class RoomController {
                 break;
             }
         }
+    }
+
+    @RequestMapping(value = "sizes", method = RequestMethod.GET)
+    public Iterable<Integer> getAllRoomSizes() {
+        return roomRepository.findDistinctRoomSizes();
     }
 }
