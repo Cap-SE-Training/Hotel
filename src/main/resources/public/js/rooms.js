@@ -94,7 +94,7 @@ function handleError(error) {
 function getRoomTypes(successCallback, errorCallback) {
     $.ajax({
         contentType: 'application/json',
-        url: '/api/room_types/all',
+        url: '/api/room_types/',
         type: 'GET',
         dataType: 'json',
         success: successCallback,
