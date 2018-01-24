@@ -160,9 +160,6 @@ $.fn.dataTable.ext.search.push(
         var price = data[5];
         var size = data[4];
 
-        if ($('#' + status).is(":checked") && $('#' + type).is(":checked") && $('#size-' + size).is(":checked")) {
-            return true;
-        }
-        return false;
+        return ($('#' + status).is(":checked") && $('#' + type).is(":checked") && $('#size-' + size).is(":checked"));
     }
 );
