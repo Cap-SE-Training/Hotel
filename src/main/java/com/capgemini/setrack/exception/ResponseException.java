@@ -14,8 +14,7 @@ public class ResponseException extends Exception {
 
     private String message;
 
-    ResponseException(){
-    }
+    ResponseException(){}
 
     ResponseException(Set<ConstraintViolation<Model>> violations){
         List<String> errors = new ArrayList<String>();

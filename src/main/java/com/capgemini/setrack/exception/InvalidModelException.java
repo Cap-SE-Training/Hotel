@@ -10,8 +10,7 @@ import java.util.Set;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class InvalidModelException extends ResponseException {
 
-    public InvalidModelException() {
-    }
+    public InvalidModelException() {}
 
     public InvalidModelException(String message){
         super(message);
