@@ -41,6 +41,12 @@ public class RoomController {
         }
     }
 
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    public Room editRoom(@RequestBody Room room) {
+        this.roomRepository.save(room);
+        return room;
+    }
+
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
     public void deleteRoom(@PathVariable long id) {
         for (Room room : this.roomRepository.findAll()) {
