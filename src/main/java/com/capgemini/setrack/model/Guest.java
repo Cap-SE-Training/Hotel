@@ -23,9 +23,7 @@ public class Guest {
             @JoinColumn(name = "bookingid", referencedColumnName = "id") })
     private List<Booking> bookings;
 
-    public Guest(){
-
-    }
+    public Guest(){ }
 
     public Guest(String firstName, String lastName, String email) {
         this.firstName = firstName;
@@ -40,8 +38,6 @@ public class Guest {
         this.email = email;
         this.telephoneNumber = telephoneNumber;
     }
-
-
 
     public long getId() {
         return id;
@@ -89,5 +85,13 @@ public class Guest {
 
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
 }
