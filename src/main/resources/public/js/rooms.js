@@ -96,7 +96,7 @@ $(document).ready(function() {
 });
 
 function handleError(error) {
-    toastr.success('Something bad happened');
+    toastr.error(JSON.parse(error.responseText).message);
     console.log(error);
 };
 
