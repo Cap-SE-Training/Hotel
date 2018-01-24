@@ -1,6 +1,7 @@
 package com.capgemini.setrack.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Guest {
@@ -15,6 +16,12 @@ public class Guest {
     private Address address;
     private String email;
     private String telephoneNumber;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "booking_guest", joinColumns = {
+            @JoinColumn(name = "guestid", referencedColumnName = "id") }, inverseJoinColumns = {
+            @JoinColumn(name = "bookingid", referencedColumnName = "id") })
+    private List<Booking> bookings;
 
     public Guest(){
 
