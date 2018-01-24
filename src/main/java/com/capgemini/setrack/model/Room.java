@@ -3,6 +3,10 @@ package com.capgemini.setrack.model;
 import com.capgemini.setrack.model.enums.RoomStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 
 @Entity
 public class Room {
@@ -12,12 +16,28 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name="room_type_id")
+    @NotNull(message="A room type is required!")
     private RoomType roomType;
 
+    @NotNull(message="A room status is required!")
     private RoomStatus roomStatus;
+
+    @NotNull(message="A name is required!")
+    @Size(min=2, max=30, message="A name must be between 2 and 30 characters long!")
+    @Column(unique=true)
     private String name;
+
+    @NotNull(message="A number is required!")
+    @Size(min=1, message="A number is required")
+    @Column(unique=true)
     private String number;
+
+    @NotNull(message="A size is required!")
+    @Min(value=1, message="The size must be at least 1!")
     private int size;
+
+    @NotNull(message="A price is required!")
+    @Min(value=1L, message="The size must be at least 1!")
     private double price;
 
     public Room(){}
