@@ -37,7 +37,7 @@ public class Room {
     private int size;
 
     @NotNull(message="A price is required!")
-    @Min(value=1L, message="The size must be at least 1!")
+    @Min(value=1L, message="The price must be at least 1!")
     private double price;
 
     public Room(){}
