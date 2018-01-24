@@ -67,8 +67,9 @@ function handleCreateFormSubmit() {
 }
 
 function handleEditFormSubmit() {
+    var room = tableHelper.getSelectedRowData();
     var data = getFormData();
-    data.id = tableHelper.getSelectedRowId();
+    _.extend(room, data);
     editRoom(data, function(result) {
         toastr.success('Edited "' + data.name + '"');
         $('#roomForm').get(0).reset();
