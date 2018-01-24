@@ -7,13 +7,13 @@ $(document).ready(function() {
     getRoomTypes(function(result) {
         result.forEach(function(roomType) {
             $('#type').append('<option value=' + roomType.id + '>' + roomType.type + '</option>');
-            $('#filterType').append('<div onclick="table.draw()"><label> <input type="checkbox" value="' + roomType.id
+            $('#filterType').append('<div onclick="tableHelper.dataTable.draw()"><label> <input type="checkbox" value="' + roomType.id
                 + '" id="' + roomType.type + '" checked>' + roomType.type + '</label></div>');
         });
     });
     getRoomSizes(function(result) {
         result.forEach(function(size) {
-            $('#filterSize').append('<div onclick="table.draw()"><label> <input type="checkbox" value="' + size
+            $('#filterSize').append('<div onclick="tableHelper.dataTable.draw()"><label> <input type="checkbox" value="' + size
                             + '" id="size-' + size + '" checked>' + size + '</label></div>');
         });
     });
