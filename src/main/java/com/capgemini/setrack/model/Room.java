@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 
 @Entity
-public class Room {
+public class Room extends Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

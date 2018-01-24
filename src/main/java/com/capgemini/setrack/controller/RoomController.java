@@ -2,6 +2,7 @@ package com.capgemini.setrack.controller;
 
 import com.capgemini.setrack.exception.InvalidModelException;
 import com.capgemini.setrack.exception.NotFoundException;
+import com.capgemini.setrack.model.Model;
 import com.capgemini.setrack.model.Room;
 import com.capgemini.setrack.repository.RoomRepository;
 import org.hibernate.exception.ConstraintViolationException;
@@ -30,11 +31,13 @@ public class RoomController {
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public Room createRoom(@RequestBody Room room) throws InvalidModelException {
+        room.validate();
+
         try {
             this.roomRepository.save(room);
             return room;
-        } catch(Exception e){
-            throw new InvalidModelException(e);
+        } catch(DataIntegrityViolationException e){
+            throw new InvalidModelException("This room already exists!");
         }
     }
 
