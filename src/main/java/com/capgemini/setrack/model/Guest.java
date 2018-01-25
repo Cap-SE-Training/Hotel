@@ -18,7 +18,8 @@ public class Guest {
     @Size(min=2, max=30, message="A name must be between 2 and 30 characters long!")
     private String lastName;
 
-    @OneToOne(mappedBy="guest")
+    @OneToOne
+    @JoinColumn(name="address_id")
 //    @NotNull(message = "Address is required!")
     private Address address;
 

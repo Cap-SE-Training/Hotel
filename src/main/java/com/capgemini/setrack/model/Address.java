@@ -1,15 +1,18 @@
 package com.capgemini.setrack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 public class Address {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+
     private long id;
 
-    @OneToOne
-    @JoinColumn(name="guest_id")
+    @OneToOne(mappedBy = "address")
+    @JsonIgnore
     private Guest guest;
 
     private String street;

@@ -1,19 +1,24 @@
 var table;
 var selectedId;
-$(document).ready(function () {
-console.log("document ready")
+$(document).ready(function() {
+    console.log("document ready")
 
     // Load DataTable with data format.
-   table =  $('#table').DataTable({
+    table = $('#table').DataTable({
         rowId: 'id',
         bLengthChange: false,
-        columns: [
-           { "data": function( data, type, row ){
-                return data.firstName + " " + data.lastName;
-           } },
-//           { "data": "address" },
-           { "data": "email" },
-           { "data": "telephoneNumber" },
+        columns: [{
+                "data": function(data, type, row) {
+                    return data.firstName + " " + data.lastName;
+                }
+            },
+            //           { "data": "address" },
+            {
+                "data": "email"
+            },
+            {
+                "data": "telephoneNumber"
+            },
         ]
     });
 
@@ -22,7 +27,7 @@ console.log("document ready")
         var id = table.row(this).id();
         if (id !== selectedId) {
             $(this).addClass('selected');
-            selectedId = table.row( this ).id();
+            selectedId = table.row(this).id();
         } else {
             selectedId = undefined;
         }
@@ -39,6 +44,11 @@ console.log("document ready")
         $("#lastName").val("");
         $("#email").val("");
         $("#telephoneNumber").val("");
+        $("#street").val("");
+        $("#houseNumber").val("");
+        $("#postalCode").val("");
+        $("#city").val("");
+        $("#country").val("");
 
     });
 
@@ -57,29 +67,29 @@ console.log("document ready")
                     className: 'btn-primary'
                 }
             },
-            callback: function(result){
+            callback: function(result) {
                 console.log(result);
-                if (result === false){
+                if (result === false) {
                     console.log('ACTION CANCELED!!!');
-                }else {
-                var guest = table.row('#' + selectedId).data();
-                console.log(guest);
-                removeGuest(guest, function() {
-                    toastr.success('Removed "' + guest.firstName + ' ' + guest.lastName + '" from Guests!');
-                    getData();
-                }, handleError);
+                } else {
+                    var guest = table.row('#' + selectedId).data();
+                    console.log(guest);
+                    removeGuest(guest, function() {
+                        toastr.success('Removed "' + guest.firstName + ' ' + guest.lastName + '" from Guests!');
+                        getData();
+                    }, handleError);
                 }
             }
         });
-     });
+    });
 })
 
 function getData() {
     console.log("Getting data...");
 
     $.ajax({
-        url:"http://localhost:8080/api/guests/",
-        type:"get",
+        url: "/api/guests/",
+        type: "get",
         success: function(guests) {
             console.log("This is the data: " + guests);
             table.clear();
@@ -89,46 +99,95 @@ function getData() {
     });
 }
 
-function postData(){
-    console.log("Posting data...");
+function postData() {
+    var addressId = postAddress()
+
+    //postGuest(addressId)
+}
+
+function postAddress() {
+    console.log("Posting address data...");
+
     var firstName = $("#firstName").val();
     var lastName = $("#lastName").val();
     var email = $("#email").val();
     var telephoneNumber = $("#telephoneNumber").val();
 
-    var newGuest = {
-        firstName : firstName,
-        lastName : lastName,
-        email : email,
-        telephoneNumber : telephoneNumber
+    var street = $("#street").val();
+    var houseNumber = $("#houseNumber").val();
+    var postalCode = $("#postalCode").val();
+    var city = $("#city").val();
+    var country = $("#country").val();
+
+    var newAddress = {
+        street: street,
+        houseNumber: houseNumber,
+        postalCode: postalCode,
+        city: city,
+        country: country
     };
 
-    var validJsonGuest = JSON.stringify(newGuest);
-    console.log(validJsonGuest);
+    var validJsonAddress = JSON.stringify(newAddress);
+    console.log(validJsonAddress);
 
     $.ajax({
-        url:"http://localhost:8080/api/guests/create",
-        type:"post",
-        contentType: "application/json",
-        data: validJsonGuest,
-        success: function(result) {
-            console.log("Succes");
-            getData();
-        }
-    });
-}
+            url: "/api/address/create",
+            type: "post",
+            contentType: "application/json",
+            data: validJsonAddress,
+            success: function(result) {
+                console.log("address creation successful");
+                //            console.log(result)
+                //            console.log(result.id)
+                //            postGuest(result.id)
+                //        }
+                //    });
+                //}
+                //function postGuest(addressId){
+                console.log("Posting guest data...");
+                //    var firstName = $("#firstName").val();
+                //    var lastName = $("#lastName").val();
+                //    var email = $("#email").val();
+                //    var telephoneNumber = $("#telephoneNumber").val();
 
-function handleError(error) {
-    toastr.success('Something bad happened');
-    console.log(error);
-};
 
-function removeGuest(guest, successCallback, errorCallback) {
-    $.ajax({
-        contentType: 'application/json',
-        url: '/api/guests/delete/' + guest.id,
-        type: 'DELETE',
-        success: successCallback,
-        error: errorCallback
-    });
-}
+                var newGuest = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    telephoneNumber: telephoneNumber,
+                    address: {
+                        id: result.id
+                    }
+                };
+
+                var validJsonGuest = JSON.stringify(newGuest);
+                console.log(validJsonGuest);
+
+                $.ajax({
+                    url: "/api/guests/create",
+                    type: "post",
+                    contentType: "application/json",
+                    data: validJsonGuest,
+                    success: function(result) {
+                        console.log("Succes");
+                        getData();
+                    }
+                });
+            }});
+    }
+
+    function handleError(error) {
+        toastr.success('Something bad happened');
+        console.log(error);
+    };
+
+    function removeGuest(guest, successCallback, errorCallback) {
+        $.ajax({
+            contentType: 'application/json',
+            url: '/api/guests/delete/' + guest.id,
+            type: 'DELETE',
+            success: successCallback,
+            error: errorCallback
+        });
+    }
