@@ -23,8 +23,8 @@ public class Room {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "booking_room", joinColumns = {
-            @JoinColumn(name = "roomid", referencedColumnName = "id") }, inverseJoinColumns = {
-            @JoinColumn(name = "bookingid", referencedColumnName = "id") })
+            @JoinColumn(name = "room_id", referencedColumnName = "id") }, inverseJoinColumns = {
+            @JoinColumn(name = "booking_id", referencedColumnName = "id") })
     private List<Booking> bookings;
 
     public Room(){}

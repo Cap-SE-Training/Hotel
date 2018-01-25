@@ -10,13 +10,11 @@ public class LocalDateTimeAttributeConverter implements AttributeConverter<Local
 
     @Override
     public Timestamp convertToDatabaseColumn(LocalDateTime locDateTime) {
-        System.out.println("Converted to Timestamp");
         return (locDateTime == null ? null : Timestamp.valueOf(locDateTime));
     }
 
     @Override
     public LocalDateTime convertToEntityAttribute(Timestamp sqlTimestamp) {
-        System.out.println("Converted to LocalDateTime");
         return (sqlTimestamp == null ? null : sqlTimestamp.toLocalDateTime());
     }
 }
