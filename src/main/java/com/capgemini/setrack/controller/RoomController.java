@@ -49,12 +49,7 @@ public class RoomController {
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
     public void deleteRoom(@PathVariable long id) {
-        for (Room room : this.roomRepository.findAll()) {
-            if (room.getId() == id) {
-                this.roomRepository.delete(room);
-                break;
-            }
-        }
+        this.roomRepository.delete(id);
     }
 
     @RequestMapping(value = "sizes", method = RequestMethod.GET)
