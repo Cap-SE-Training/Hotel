@@ -34,6 +34,7 @@ $(document).ready(function () {
         setFormData(guest);
         $('#guestModal .modal-title').html('Editing ' + guest.name);
         $('#guestModal').modal('show');
+        
     });
     $('#remove').on('click', function(event) {
         var guest = tableHelper.getSelectedRowData();
