@@ -1,6 +1,8 @@
 package com.capgemini.setrack.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -12,6 +14,9 @@ public class RoomType {
     @OneToMany(mappedBy="roomType", cascade=CascadeType.ALL)
     private Set<Room> rooms;
 
+    @NotNull(message="A type is required!")
+    @Size(min=1, message="A type is required!")
+    @Column(unique=true)
     private String type;
 
     public RoomType(){}
