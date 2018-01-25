@@ -32,3 +32,18 @@ function getBookings() {
         }
     });
 }
+
+function postBooking() {
+    console.log("Getting All Bookings...");
+
+    $.ajax({
+        url:"http://localhost:8080/api/booking/",
+        type:"post",
+        success: function(bookings) {
+            console.log("This is the data: " + bookings);
+            table.clear();
+            table.rows.add(bookings);
+            table.columns.adjust().draw();
+        }
+    });
+}
