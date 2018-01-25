@@ -14,7 +14,8 @@ $(document).ready(function () {
             { "data": "checkedIn" },
             { "data": "checkedOut" },
             { "data": "paid" },
-            { "data": "paymentMethod" }
+            { "data": "paymentMethod" },
+            { "data": "duration" }
         ]
     });
 })
