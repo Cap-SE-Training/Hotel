@@ -1,17 +1,24 @@
-var table;
+var tableHelper;
 var tableElement;
 var selectedId;
+var edit = false;
 
 $(document).ready(function() {
-        console.log('??');
     getRoomTypes(function(result) {
         result.forEach(function(roomType) {
             $('#type').append('<option value=' + roomType.id + '>' + roomType.type + '</option>');
+            $('#filterType').append('<div onclick="tableHelper.dataTable.draw()"><label> <input type="checkbox" value="' + roomType.id
+                + '" id="' + roomType.type + '" checked>' + roomType.type + '</label></div>');
         });
-        console.log(result);
+    });
+    getRoomSizes(function(result) {
+        result.forEach(function(size) {
+            $('#filterSize').append('<div onclick="tableHelper.dataTable.draw()"><label> <input type="checkbox" value="' + size
+                            + '" id="size-' + size + '" checked>' + size + '</label></div>');
+        });
     });
     tableElement = $('#roomsTable');
-    table = tableElement.DataTable({
+    tableHelper = new DataTableHelper(tableElement, {
         bLengthChange: false,
         rowId: 'id',
         columns: [
@@ -23,78 +30,97 @@ $(document).ready(function() {
             { "data": "price" }
         ]
     });
-    tableElement.on('click', 'tr', function() {
-        $(tableElement).find('tr.selected').removeClass('selected');
-        var id = table.row(this).id();
-        if (id !== selectedId) {
-            $(this).addClass('selected');
-            selectedId = table.row( this ).id();
-        } else {
-            selectedId = undefined;
-        }
 
-        $('button.controls').prop('disabled', selectedId === undefined);
-    });
     updateTable();
 
+    $('#create').on('click', function(event) {
+        $('#roomModal .modal-title').html('Creating a room');
+        $('#roomModal').modal('show');
+    });
+    $('#edit').on('click', function(event) {
+        edit = true;
+        var room = tableHelper.getSelectedRowData();
+        setFormData(room);
+        $('#roomModal .modal-title').html('Editing ' + room.name);
+        $('#roomModal').modal('show');
+    });
     $('#remove').on('click', function(event) {
-        bootbox.confirm({
-            message: "Are you sure you want to delete this room?",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-danger'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-primary'
-                }
-            },
-            callback: function(result) {
-                var room = table.row('#' + selectedId).data();
-                console.log(room);
-                removeRoom(room, function() {
-                    toastr.success('Removed "' + room.name + '" from Rooms!');
-                    updateTable();
-                }, handleError);
-            }
+        var room = tableHelper.getSelectedRowData();
+        bootboxConfirm('Are you sure you want to delete this room?', function(result) {
+            removeRoom(room, function() {
+                toastr.success('Removed "' + room.name + '" from Rooms!');
+                updateTable();
+            }, handleError);
         });
     });
-    $('#addRoom').submit(function(event) {
+    $('#roomForm').submit(function(event) {
         event.preventDefault();
-
-        $('#addRoomModal').modal('hide');
-
-        var data = {
-            roomStatus: $('#status').val(),
-            name: $('#name').val(),
-            number: $('#number').val(),
-            roomType: {
-                id: $('#type').val()
-            },
-            size: $('#size').val(),
-            price: $('#price').val()
-        };
-
-        console.log(data);
-        createRoom(data, function(result) {
-           toastr.success('Added "' + data.name + '" to Rooms!');
-           console.log(result);
-           $('#addRoom').get(0).reset();
-           updateTable();
-        }, handleError);
+        $('#roomModal').modal('hide');
+        if (edit) {
+            handleEditFormSubmit();
+        } else {
+            handleCreateFormSubmit();
+        }
     });
 });
 
+function handleCreateFormSubmit() {
+    var data = getFormData();
+    createRoom(data, function(result) {
+        toastr.success('Added "' + data.name + '" to Rooms!');
+        $('#roomForm').get(0).reset();
+        updateTable();
+    }, handleError);
+}
+
+function handleEditFormSubmit() {
+    var room = tableHelper.getSelectedRowData();
+    var data = getFormData();
+    _.extend(room, data);
+    editRoom(data, function(result) {
+        toastr.success('Edited "' + data.name + '"');
+        $('#roomForm').get(0).reset();
+        updateTable();
+        edit = false;
+    }, handleError);
+}
+
+function getFormData() {
+    return {
+        roomStatus: $('#status').val(),
+        name: $('#name').val(),
+        number: $('#number').val(),
+        roomType: {
+            id: $('#type').val()
+        },
+        size: $('#size').val(),
+        price: $('#price').val()
+    };
+}
+
+function setFormData(room) {
+    $('#status').val();
+    $('#status option:eq(' + room.roomStatus + ')').prop('selected', true)
+    $('#name').val(room.name);
+    $('#number').val(room.number);
+    $('#type option:eq(' + room.roomType + ')').prop('selected', true)
+    $('#size').val(room.size);
+    $('#price').val(room.price);
+}
+
 function handleError(error) {
-    toastr.success('Something bad happened');
+    toastr.error(JSON.parse(error.responseText).message);
     console.log(error);
 };
 
 function getRoomTypes(successCallback, errorCallback) {
+    ajaxJsonCall('GET', '/api/room_types/', null, successCallback, errorCallback);
+}
+
+function getRoomSizes(successCallback, errorCallback) {
     $.ajax({
         contentType: 'application/json',
-        url: '/api/room_types/',
+        url: '/api/rooms/sizes',
         type: 'GET',
         dataType: 'json',
         success: successCallback,
@@ -103,32 +129,33 @@ function getRoomTypes(successCallback, errorCallback) {
 }
 
 function createRoom(room, successCallback, errorCallback) {
-    $.ajax({
-        contentType: 'application/json',
-        url: '/api/rooms/create',
-        data: JSON.stringify(room),
-        type: 'POST',
-        dataType: 'json',
-        success: successCallback,
-        error: errorCallback
-    });
+    ajaxJsonCall('POST', '/api/rooms/create', room, successCallback, errorCallback);
+}
+
+function editRoom(room, successCallback, errorCallback) {
+    ajaxJsonCall('POST', '/api/rooms/edit', room, successCallback, errorCallback);
 }
 
 function removeRoom(room, successCallback, errorCallback) {
-    $.ajax({
-        contentType: 'application/json',
-        url: '/api/rooms/delete/' + room.id,
-        type: 'DELETE',
-        success: successCallback,
-        error: errorCallback
-    });
+    ajaxJsonCall('DELETE', '/api/rooms/delete/' + room.id, null, successCallback, errorCallback);
 }
 
 function updateTable() {
     $('button.controls').prop('disabled', selectedId === undefined);
     $.get('/api/rooms/', function(rooms) {
-        table.clear();
-        table.rows.add(rooms);
-        table.columns.adjust().draw();
+        tableHelper.dataTable.clear();
+        tableHelper.dataTable.rows.add(rooms);
+        tableHelper.dataTable.columns.adjust().draw();
     });
 }
+
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var status = data[0].toLowerCase();
+        var type = data[3];
+        var price = data[5];
+        var size = data[4];
+
+        return ($('#' + status).is(":checked") && $('#' + type).is(":checked") && $('#size-' + size).is(":checked"));
+    }
+);
