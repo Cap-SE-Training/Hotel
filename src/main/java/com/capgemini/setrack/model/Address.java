@@ -8,8 +8,7 @@ public class Address {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name="guest_id")
+    @OneToOne(mappedBy="address")
     private Guest guest;
 
     private String street;

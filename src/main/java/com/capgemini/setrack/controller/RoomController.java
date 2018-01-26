@@ -42,7 +42,9 @@ public class RoomController {
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
-    public Room editRoom(@RequestBody Room room) {
+    public Room editRoom(@RequestBody Room room) throws InvalidModelException {
+        room.validate();
+
         this.roomRepository.save(room);
         return room;
     }

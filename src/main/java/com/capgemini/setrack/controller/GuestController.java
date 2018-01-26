@@ -23,7 +23,7 @@ public class GuestController {
         return guest;
     }
 
-    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
     public Guest updateGuest(@RequestBody Guest guest){
         //check if guest already exists
         this.guestRepository.save(guest);

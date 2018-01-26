@@ -77,7 +77,7 @@ function handleEditFormSubmit() {
     var room = tableHelper.getSelectedRowData();
     var data = getFormData();
     _.extend(room, data);
-    editRoom(data, function(result) {
+    editRoom(room, function(result) {
         toastr.success('Edited "' + data.name + '"');
         $('#roomForm').get(0).reset();
         updateTable();
@@ -134,6 +134,7 @@ function createRoom(room, successCallback, errorCallback) {
 
 function editRoom(room, successCallback, errorCallback) {
     ajaxJsonCall('POST', '/api/rooms/edit', room, successCallback, errorCallback);
+    console.log(room.id);
 }
 
 function removeRoom(room, successCallback, errorCallback) {
@@ -142,11 +143,10 @@ function removeRoom(room, successCallback, errorCallback) {
 
 function updateTable() {
     $('button.controls').prop('disabled', selectedId === undefined);
-    $.get('/api/rooms/', function(rooms) {
-        tableHelper.dataTable.clear();
-        tableHelper.dataTable.rows.add(rooms);
-        tableHelper.dataTable.columns.adjust().draw();
-    });
+    ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
+          tableHelper.dataTable.clear();
+          tableHelper.dataTable.rows.add(guests);
+          tableHelper.dataTable.columns.adjust().draw();}, null)
 }
 
 $.fn.dataTable.ext.search.push(
