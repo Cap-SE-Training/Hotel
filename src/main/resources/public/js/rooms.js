@@ -4,7 +4,7 @@ var selectedId;
 var edit = false;
 
 $(document).ready(function() {
-    getRoomTypes(function(result) {
+   getRoomTypes(function(result) {
         result.forEach(function(roomType) {
             $('#type').append('<option value=' + roomType.id + '>' + roomType.type + '</option>');
             $('#filterType').append('<div onclick="tableHelper.dataTable.draw()"><label> <input type="checkbox" value="' + roomType.id
@@ -17,6 +17,7 @@ $(document).ready(function() {
                             + '" id="size-' + size + '" checked>' + size + '</label></div>');
         });
     });
+
     tableElement = $('#roomsTable');
     tableHelper = new DataTableHelper(tableElement, {
         bLengthChange: false,
@@ -30,7 +31,7 @@ $(document).ready(function() {
             { "data": "price" }
         ]
     });
-
+    
     updateTable();
 
     $('#create').on('click', function(event) {
@@ -77,8 +78,8 @@ function handleEditFormSubmit() {
     var room = tableHelper.getSelectedRowData();
     var data = getFormData();
     _.extend(room, data);
-    editRoom(data, function(result) {
-        toastr.success('Edited "' + data.name + '"');
+    editRoom(room, function(result) {
+        toastr.success('Edited "' + room.name + '"');
         $('#roomForm').get(0).reset();
         updateTable();
         edit = false;
@@ -99,11 +100,11 @@ function getFormData() {
 }
 
 function setFormData(room) {
-    $('#status').val();
-    $('#status option:eq(' + room.roomStatus + ')').prop('selected', true)
+    console.log(room);
+    $('#status option:eq("' + room.roomStatus + '")').prop('selected', true)
     $('#name').val(room.name);
     $('#number').val(room.number);
-    $('#type option:eq(' + room.roomType + ')').prop('selected', true)
+    $('#type').val(room.roomType.id);
     $('#size').val(room.size);
     $('#price').val(room.price);
 }
@@ -114,18 +115,11 @@ function handleError(error) {
 };
 
 function getRoomTypes(successCallback, errorCallback) {
-    ajaxJsonCall('GET', '/api/room_types/', null, successCallback, errorCallback);
+    ajaxJsonCall('GET', '/api/room_types/', null, successCallback, errorCallback);    
 }
 
 function getRoomSizes(successCallback, errorCallback) {
-    $.ajax({
-        contentType: 'application/json',
-        url: '/api/rooms/sizes',
-        type: 'GET',
-        dataType: 'json',
-        success: successCallback,
-        error: errorCallback
-    });
+    ajaxJsonCall('GET', '/api/rooms/sizes', null, successCallback, errorCallback);
 }
 
 function createRoom(room, successCallback, errorCallback) {
@@ -137,7 +131,7 @@ function editRoom(room, successCallback, errorCallback) {
 }
 
 function removeRoom(room, successCallback, errorCallback) {
-    ajaxJsonCall('DELETE', '/api/rooms/delete/' + room.id, null, successCallback, errorCallback);
+    ajaxJsonCall('DELETE', '/api/rooms/delete/' + room.id, null, successCallback, errorCallback);    
 }
 
 function updateTable() {
@@ -148,6 +142,7 @@ function updateTable() {
         tableHelper.dataTable.columns.adjust().draw();
     });
 }
+
 
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
