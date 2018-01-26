@@ -34,7 +34,6 @@ $(document).ready(function () {
         setFormData(guest);
         $('#guestModal .modal-title').html('Editing ' + guest.name);
         $('#guestModal').modal('show');
-        
     });
     $('#remove').on('click', function(event) {
         var guest = tableHelper.getSelectedRowData();
@@ -69,7 +68,7 @@ function handleEditFormSubmit() {
     var guest = tableHelper.getSelectedRowData();
     var data = getFormData();
     _.extend(guest, data);
-    editGuest(data, function(result) {
+    editGuest(guest, function(result) {
         toastr.success('Edited "' + data.firstName + ' ' + data.lastName + '"');
         $('#guestForm').get(0).reset();
         updateTable();
@@ -112,35 +111,12 @@ function setFormData(guest) {
     $('#telephoneNumber').val(guest.telephoneNumber);
 }
 
-//
-//    // Reset Form after submit
-//    $("#newGuestForm").on('submit', function(e) {
-//        console.log("Submitted new guest form");
-//        $('#newGuestModal').modal('hide');
-//        $("#firstName").val("");
-//        $("#lastName").val("");
-//        $("#email").val("");
-//        $("#telephoneNumber").val("");
-//    });
-
 function updateTable() {
     console.log("Updating table..");
 
     $('button.controls').prop('disabled', selectedId === undefined);
-    $.get('api/guests/', function(guests) {
-        tableHelper.dataTable.clear();
-        tableHelper.dataTable.rows.add(guests);
-        tableHelper.dataTable.columns.adjust().draw();
-    })
+    ajaxJsonCall('GET', '/api/guests/', null, function(guests) {
+      tableHelper.dataTable.clear();
+      tableHelper.dataTable.rows.add(guests);
+      tableHelper.dataTable.columns.adjust().draw();}, null)
 }
-
-
-//function removeGuest(guest, successCallback, errorCallback) {
-//    $.ajax({
-//        contentType: 'application/json',
-//        url: '/api/guests/delete/' + guest.id,
-//        type: 'DELETE',
-//        success: successCallback,
-//        error: errorCallback
-//    });
-//}

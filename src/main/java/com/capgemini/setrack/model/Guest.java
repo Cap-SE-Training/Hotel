@@ -12,8 +12,10 @@ public class Guest {
     private String firstName;
     private String lastName;
 
-    @OneToOne(mappedBy="guest")
+    @OneToOne
+    @JoinColumn(name="address_id")
     private Address address;
+
     private String email;
     private String telephoneNumber;
 
