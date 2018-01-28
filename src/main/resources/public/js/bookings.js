@@ -10,20 +10,38 @@ $(document).ready(function () {
             { "data": "guests.0.firstName" },
             { "data": "guests.0.lastName" },
             { "mData": function date(data, type, dataToSet) {
-            		    return data.startDate.dayOfMonth + "-" + data.startDate.monthValue + "-" + data.startDate.year;
-            	        }
+                    return formatDate(data.startDate);
+                }
             },
             { "mData": function date(data, type, dataToSet) {
-                        		    return data.endDate.dayOfMonth + "-" + data.endDate.monthValue + "-" + data.endDate.year;
-                        	        }
+                    return formatDate(data.endDate);
+                }
             },
-            { "data": "checkedIn" },
-            { "data": "checkedOut" },
-            { "data": "paid" },
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.checkedIn);
+                }
+            },
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.checkedOut);
+                }
+            },
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.paid);
+                }
+            },
             { "data": "paymentMethod" }
         ]
     });
 })
+
+function formatDate(date){
+    if(date){
+        return date.dayOfMonth + "-" + date.monthValue + "-" + date.year;
+    } else {
+        return null;
+    }
+}
+
 function getBookings() {
     console.log("Getting All Bookings...");
 
