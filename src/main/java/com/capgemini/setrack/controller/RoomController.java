@@ -42,19 +42,16 @@ public class RoomController {
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
-    public Room editRoom(@RequestBody Room room) {
+    public Room editRoom(@RequestBody Room room) throws InvalidModelException {
+        room.validate();
+
         this.roomRepository.save(room);
         return room;
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
     public void deleteRoom(@PathVariable long id) {
-        for (Room room : this.roomRepository.findAll()) {
-            if (room.getId() == id) {
-                this.roomRepository.delete(room);
-                break;
-            }
-        }
+        this.roomRepository.delete(id);
     }
 
     @RequestMapping(value = "sizes", method = RequestMethod.GET)

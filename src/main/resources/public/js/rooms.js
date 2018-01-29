@@ -31,7 +31,7 @@ $(document).ready(function() {
             { "data": "price" }
         ]
     });
-    
+
     updateTable();
 
     $('#create').on('click', function(event) {
@@ -115,7 +115,7 @@ function handleError(error) {
 };
 
 function getRoomTypes(successCallback, errorCallback) {
-    ajaxJsonCall('GET', '/api/room_types/', null, successCallback, errorCallback);    
+    ajaxJsonCall('GET', '/api/room_types/', null, successCallback, errorCallback);
 }
 
 function getRoomSizes(successCallback, errorCallback) {
@@ -128,19 +128,19 @@ function createRoom(room, successCallback, errorCallback) {
 
 function editRoom(room, successCallback, errorCallback) {
     ajaxJsonCall('POST', '/api/rooms/edit', room, successCallback, errorCallback);
+    console.log(room.id);
 }
 
 function removeRoom(room, successCallback, errorCallback) {
-    ajaxJsonCall('DELETE', '/api/rooms/delete/' + room.id, null, successCallback, errorCallback);    
+    ajaxJsonCall('DELETE', '/api/rooms/delete/' + room.id, null, successCallback, errorCallback);
 }
 
 function updateTable() {
     $('button.controls').prop('disabled', selectedId === undefined);
-    $.get('/api/rooms/', function(rooms) {
-        tableHelper.dataTable.clear();
-        tableHelper.dataTable.rows.add(rooms);
-        tableHelper.dataTable.columns.adjust().draw();
-    });
+    ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
+          tableHelper.dataTable.clear();
+          tableHelper.dataTable.rows.add(guests);
+          tableHelper.dataTable.columns.adjust().draw();}, null)
 }
 
 
