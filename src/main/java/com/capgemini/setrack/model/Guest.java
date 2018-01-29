@@ -2,9 +2,10 @@ package com.capgemini.setrack.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
-public class Guest {
+public class Guest extends Model{
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -20,7 +21,7 @@ public class Guest {
 
     @OneToOne
     @JoinColumn(name="address_id")
-//    @NotNull(message = "Address is required!")
+    @NotNull(message = "Address is required!")
     private Address address;
 
     @NotNull
@@ -32,9 +33,13 @@ public class Guest {
     @Size(min = 10, max = 15)
     private String telephoneNumber;
 
-    public Guest(){
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "booking_guest", joinColumns = {
+            @JoinColumn(name = "guest_id", referencedColumnName = "id") }, inverseJoinColumns = {
+            @JoinColumn(name = "booking_id", referencedColumnName = "id") })
+    private List<Booking> bookings;
 
-    }
+    public Guest(){ }
 
     public Guest(String firstName, String lastName, String email) {
         this.firstName = firstName;
@@ -49,8 +54,6 @@ public class Guest {
         this.email = email;
         this.telephoneNumber = telephoneNumber;
     }
-
-
 
     public long getId() {
         return id;
@@ -98,5 +101,13 @@ public class Guest {
 
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
     }
 }

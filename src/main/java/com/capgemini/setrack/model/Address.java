@@ -5,10 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
-public class Address {
+public class Address extends Model{
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-
     private long id;
 
     @OneToOne(mappedBy = "address")

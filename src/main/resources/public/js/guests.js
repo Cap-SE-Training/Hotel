@@ -1,28 +1,29 @@
-var table;
+var tableHelper;
+var tableElement;
 var selectedId;
-$(document).ready(function() {
-    console.log("document ready")
+var edit = false;
+
+$(document).ready(function () {
+    console.log("Guest document ready")
 
     // Load DataTable with data format.
-    table = $('#table').DataTable({
-        rowId: 'id',
+    tableElement = $('#guestsTable');
+    tableHelper =  new DataTableHelper(tableElement, {
         bLengthChange: false,
-        columns: [{
-                "data": function(data, type, row) {
-                    return data.firstName + " " + data.lastName;
-                }
-            },
-            //           { "data": "address" },
-            {
-                "data": "email"
-            },
-            {
-                "data": "telephoneNumber"
-            },
+        rowId: 'id',
+        columns: [
+           { "data": function( data, type, row ){
+                return data.firstName + " " + data.lastName;
+           } },
+           //{ "data": "address" },
+           { "data": "email" },
+           { "data": "telephoneNumber" },
         ]
     });
 
-    $('#table').on('click', 'tr', function() {
+    updateTable();
+
+    $('#guestsTable').on('click', 'tr', function() {
         $(table).find('tr.selected').removeClass('selected');
         var id = table.row(this).id();
         if (id !== selectedId) {
@@ -31,8 +32,11 @@ $(document).ready(function() {
         } else {
             selectedId = undefined;
         }
+    });
 
-        $('button.controls').prop('disabled', selectedId === undefined);
+    $('#create').on('click', function(event) {
+        $('#newGuestModal .modal-title').html('Creating a guest');
+        $('#newGuestModal').modal('show');
     });
 
     // Reset Form after submit
@@ -50,10 +54,14 @@ $(document).ready(function() {
         $("#city").val("");
         $("#country").val("");
 
+    $('#edit').on('click', function(event) {
+        edit = true;
+        var guest = tableHelper.getSelectedRowData();
+        console.log(guest)
+        setFormData(guest);
+        $('#newGuestModal .modal-title').html('Editing ' + guest.name);
+        $('#newGuestModal').modal('show');
     });
-
-    getData();
-
     $('#remove').on('click', function(event) {
         bootbox.confirm({
             message: "Are you sure you want to delete this guest?",
@@ -82,27 +90,29 @@ $(document).ready(function() {
             }
         });
     });
-})
-
-function getData() {
-    console.log("Getting data...");
-
-    $.ajax({
-        url: "/api/guests/",
-        type: "get",
-        success: function(guests) {
-            console.log("This is the data: " + guests);
-            table.clear();
-            table.rows.add(guests);
-            table.columns.adjust().draw();
+    });
+    $('#newGuestForm').submit(function(event) {
+        event.preventDefault();
+        if (edit) {
+            handleEditFormSubmit();
+        } else {
+            handleCreateFormSubmit();
         }
     });
+})
+
+function handleCreateFormSubmit() {
+    var data = getFormData();
+    createGuest(data, function(result) {
+        toastr.success('Added "' + data.firstName + ' ' + data.lastName + '" to Guests!');
+        $('#newGuestModal').modal('hide');
+        $('#newGuestForm').get(0).rHEADeset();
+        updateTable();
+    }, handleError);
 }
 
 function postData() {
     var addressId = postAddress()
-
-    //postGuest(addressId)
 }
 
 function postAddress() {
@@ -137,19 +147,6 @@ function postAddress() {
             data: validJsonAddress,
             success: function(result) {
                 console.log("address creation successful");
-                //            console.log(result)
-                //            console.log(result.id)
-                //            postGuest(result.id)
-                //        }
-                //    });
-                //}
-                //function postGuest(addressId){
-                console.log("Posting guest data...");
-                //    var firstName = $("#firstName").val();
-                //    var lastName = $("#lastName").val();
-                //    var email = $("#email").val();
-                //    var telephoneNumber = $("#telephoneNumber").val();
-
 
                 var newGuest = {
                     firstName: firstName,
@@ -161,19 +158,11 @@ function postAddress() {
                     }
                 };
 
-                var validJsonGuest = JSON.stringify(newGuest);
-                console.log(validJsonGuest);
-
-                $.ajax({
-                    url: "/api/guests/create",
-                    type: "post",
-                    contentType: "application/json",
-                    data: validJsonGuest,
-                    success: function(result) {
-                        console.log("Succes");
-                        getData();
-                    }
-                });
+                createGuest(newGuest, function(result) {
+                    toastr.success('Added "' + newGuest.firstName + " " + newGuest.lastName + '" to Guests!');
+                    $('#newGuestForm').get(0).reset();
+                    updateTable();
+                }, handleError);
             }});
     }
 
@@ -191,3 +180,60 @@ function postAddress() {
             error: errorCallback
         });
     }
+
+function handleEditFormSubmit() {
+    var guest = tableHelper.getSelectedRowData();
+    var data = getFormData();
+    _.extend(guest, data);
+    editGuest(guest, function(result) {
+        toastr.success('Edited "' + data.firstName + ' ' + data.lastName + '"');
+        $('#newGuestForm').get(0).reset();
+        updateTable();
+        edit = false;
+    }, handleError);
+}
+function handleError(error) {
+    toastr.error(JSON.parse(error.responseText).message);
+    console.log(error);
+};
+
+function createGuest(guest, successCallback, errorCallback) {
+    console.log("Creating guest..");
+    ajaxJsonCall('POST', '/api/guests/create', guest, successCallback, errorCallback);
+}
+
+function editGuest(guest, successCallback, errorCallback) {
+    console.log("Editing guest..")
+    ajaxJsonCall('POST', '/api/guests/edit', guest, successCallback, errorCallback);
+}
+
+function removeGuest(guest, successCallback, errorCallback) {
+    console.log("Removing guest..")
+    ajaxJsonCall('DELETE', '/api/guests/delete/' + guest.id, null, successCallback, errorCallback);
+}
+
+function getFormData() {
+    return {
+        firstName : $("#firstName").val(),
+        lastName : $("#lastName").val(),
+        email : $("#email").val(),
+        telephoneNumber : $("#telephoneNumber").val()
+    };
+}
+
+function setFormData(guest) {
+    $('#firstName').val(guest.firstName);
+    $('#lastName').val(guest.lastName);
+    $('#email').val(guest.email);
+    $('#telephoneNumber').val(guest.telephoneNumber);
+}
+
+function updateTable() {
+    console.log("Updating table..");
+
+    $('button.controls').prop('disabled', selectedId === undefined);
+    ajaxJsonCall('GET', '/api/guests/', null, function(guests) {
+      tableHelper.dataTable.clear();
+      tableHelper.dataTable.rows.add(guests);
+      tableHelper.dataTable.columns.adjust().draw();}, null)
+}
