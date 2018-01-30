@@ -1,5 +1,7 @@
 package com.capgemini.setrack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class Guest {
     private String email;
     private String telephoneNumber;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "booking_guest", joinColumns = {
             @JoinColumn(name = "guest_id", referencedColumnName = "id") }, inverseJoinColumns = {
