@@ -6,24 +6,48 @@ $(document).ready(function () {
         bLengthChange: false,
         rowId: 'id',
         columns: [
-            { "data": "roomId" },
-            { "data": "guest.name" },
-            { "data": "guest.lastName" },
-            { "data": "startDate" },
-            { "data": "endDate" },
-            { "data": "checkedIn" },
-            { "data": "checkedOut" },
-            { "data": "paid" },
-            { "data": "paymentMethod" },
-            { "data": "duration" }
+            { "data": "rooms.0.id" },
+            { "data": "guests.0.firstName" },
+            { "data": "guests.0.lastName" },
+            //https://legacy.datatables.net/ref#mData
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.startDate);
+                }
+            },
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.endDate);
+                }
+            },
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.checkedIn);
+                }
+            },
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.checkedOut);
+                }
+            },
+            { "mData": function date(data, type, dataToSet) {
+                    return formatDate(data.paid);
+                }
+            },
+            { "data": "paymentMethod" }
         ]
     });
 })
+
+function formatDate(date){
+    if(date){
+        return date.dayOfMonth + "-" + date.monthValue + "-" + date.year;
+    } else {
+        return null;
+    }
+}
+
 function getBookings() {
     console.log("Getting All Bookings...");
 
     $.ajax({
-        url:"http://localhost:8080/api/booking/",
+        url:"/api/bookings/",
         type:"get",
         success: function(bookings) {
             console.log("This is the data: " + bookings);
@@ -38,7 +62,7 @@ function postBooking() {
     console.log("Getting All Bookings...");
 
     $.ajax({
-        url:"http://localhost:8080/api/booking/",
+        url:"/api/bookings/",
         type:"post",
         success: function(bookings) {
             console.log("This is the data: " + bookings);

@@ -1,6 +1,7 @@
 package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.RoomStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import javax.persistence.*;
@@ -42,6 +43,7 @@ public class Room extends Model {
     @Min(value=1L, message="The price must be at least 1!")
     private double price;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "booking_room", joinColumns = {
             @JoinColumn(name = "room_id", referencedColumnName = "id") }, inverseJoinColumns = {

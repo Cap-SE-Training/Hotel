@@ -145,7 +145,7 @@ function updateTable() {
     $('button.controls').prop('disabled', selectedId === undefined);
     ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
           tableHelper.dataTable.clear();
-          tableHelper.dataTable.rows.add(guests);
+          tableHelper.dataTable.rows.add(rooms);
           tableHelper.dataTable.columns.adjust().draw();}, null)
 }
 

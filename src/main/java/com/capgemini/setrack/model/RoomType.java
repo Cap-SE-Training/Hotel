@@ -1,5 +1,7 @@
 package com.capgemini.setrack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,6 +13,7 @@ public class RoomType {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy="roomType", cascade=CascadeType.ALL)
     private Set<Room> rooms;
 
