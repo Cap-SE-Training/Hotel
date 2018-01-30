@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel - Rooms</title>
 
     <!-- JQuery -->
@@ -9,6 +10,9 @@
             src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="/css/bootstrap-minty.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
@@ -37,6 +41,8 @@
     <script src="/js/helpers/ajax.js"></script>
     <script src="/js/helpers/bootbox.js"></script>
     <script src="/js/helpers/dataTables.js"></script>
+
+    <script src="/js/createBooking.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-10">
@@ -71,7 +77,11 @@
 </nav>
 <div class="container mt-5">
     <div class="row">
-        <div class="col">
+        <div class="col-md-6">
+            Startdate: <div id="startDatepicker"></div>
+        </div>
+        <div class="col-md-6">
+            Enddate: <div id="endDatepicker"></div>
         </div>
     </div>
 </div>
