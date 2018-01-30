@@ -26,7 +26,7 @@ public class AddressController {
             this.addressRepository.save(address);
             return address;
         } catch(DataIntegrityViolationException e){
-            throw new InvalidModelException("This guest already exists!");
+            throw new InvalidModelException("This address already exists!");
         }
     }
 
