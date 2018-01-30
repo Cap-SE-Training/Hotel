@@ -75,10 +75,6 @@ function handleEditFormSubmit() {
         edit = false;
     }, handleError);
 }
-function handleError(error) {
-    toastr.error(JSON.parse(error.responseText).message);
-    console.log(error);
-};
 
 function createGuest(guest, successCallback, errorCallback) {
     console.log("Creating guest..")
