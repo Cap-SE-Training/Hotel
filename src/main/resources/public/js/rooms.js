@@ -56,7 +56,6 @@ $(document).ready(function() {
     });
     $('#roomForm').submit(function(event) {
         event.preventDefault();
-        $('#roomModal').modal('hide');
         if (edit) {
             handleEditFormSubmit();
         } else {
@@ -68,6 +67,7 @@ $(document).ready(function() {
 function handleCreateFormSubmit() {
     var data = getFormData();
     createRoom(data, function(result) {
+        $('#roomModal').modal('hide');
         toastr.success('Added "' + data.name + '" to Rooms!');
         $('#roomForm').get(0).reset();
         updateTable();
@@ -79,6 +79,7 @@ function handleEditFormSubmit() {
     var data = getFormData();
     _.extend(room, data);
     editRoom(room, function(result) {
+        $('#roomModal').modal('hide');
         toastr.success('Edited "' + room.name + '"');
         $('#roomForm').get(0).reset();
         updateTable();
