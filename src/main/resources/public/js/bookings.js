@@ -9,6 +9,7 @@ $(document).ready(function () {
             { "data": "rooms.0.id" },
             { "data": "guests.0.firstName" },
             { "data": "guests.0.lastName" },
+            //https://legacy.datatables.net/ref#mData
             { "mData": function date(data, type, dataToSet) {
                     return formatDate(data.startDate);
                 }
@@ -46,7 +47,7 @@ function getBookings() {
     console.log("Getting All Bookings...");
 
     $.ajax({
-        url:"/api/booking/",
+        url:"/api/bookings/",
         type:"get",
         success: function(bookings) {
             console.log("This is the data: " + bookings);
@@ -61,7 +62,7 @@ function postBooking() {
     console.log("Getting All Bookings...");
 
     $.ajax({
-        url:"http://localhost:8080/api/booking/",
+        url:"/api/bookings/",
         type:"post",
         success: function(bookings) {
             console.log("This is the data: " + bookings);
