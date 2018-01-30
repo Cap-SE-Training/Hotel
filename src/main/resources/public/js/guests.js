@@ -43,11 +43,17 @@ $(document).ready(function () {
     $('#remove').on('click', function(event) {
         var guest = tableHelper.getSelectedRowData();
         bootboxConfirm("Are you sure you want to delete this guest?", function(result){
+            if (result == true){
             removeGuest(guest, function() {
                 toastr.success('Removed "' + guest.firstName + ' ' + guest.lastName + '" from Guests!');
                 updateTable();
-            }, handleError);
+            }, handleError);}
+            else{
+            $('#modal').modal('toggle');;}
+
+
         });
+
     });
     $('#guestForm').submit(function(event) {
         event.preventDefault();
