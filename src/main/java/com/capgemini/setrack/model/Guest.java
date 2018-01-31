@@ -1,5 +1,7 @@
 package com.capgemini.setrack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.List;
@@ -42,6 +44,7 @@ public class Guest extends Model{
             @JoinColumn(name = "booking_id", referencedColumnName = "id", nullable=false) },
             foreignKey = @ForeignKey(name = "FK_GUEST_BOOKING"),
             inverseForeignKey = @ForeignKey(name = "FK_BOOKING_GUEST"))
+    @JsonIgnore
     private List<Booking> bookings;
 
     public Guest(){ }
