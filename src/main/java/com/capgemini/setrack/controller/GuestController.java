@@ -1,8 +1,10 @@
 package com.capgemini.setrack.controller;
 
+import com.capgemini.setrack.exception.InvalidModelException;
 import com.capgemini.setrack.model.Guest;
 import com.capgemini.setrack.repository.GuestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,14 +19,21 @@ public class GuestController {
     }
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
-    public Guest createGuest(@RequestBody Guest guest){
-        //check if it's a new guest
-        this.guestRepository.save(guest);
-        return guest;
+    public Guest createGuest(@RequestBody Guest guest) throws InvalidModelException {
+        guest.validate();
+
+        try {
+            this.guestRepository.save(guest);
+            return guest;
+        } catch(DataIntegrityViolationException e){
+            throw new InvalidModelException("This guest already exists!");
+        }
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
-    public Guest updateGuest(@RequestBody Guest guest){
+    public Guest updateGuest(@RequestBody Guest guest) throws InvalidModelException {
+        guest.validate();
+
         //check if guest already exists
         this.guestRepository.save(guest);
         return guest;
@@ -35,3 +44,4 @@ public class GuestController {
         this.guestRepository.delete(id);
     }
 }
+
