@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,11 +16,16 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotNull(message="A starting date is required!")
     private LocalDateTime startDate;
+
+    @NotNull(message="An end date is required!")
     private LocalDateTime endDate;
+
     private LocalDateTime checkedIn;
     private LocalDateTime checkedOut;
     private LocalDateTime paid;
+
     private PaymentMethod paymentMethod;
 
     @ManyToMany(mappedBy="bookings")
