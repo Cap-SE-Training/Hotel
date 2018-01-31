@@ -44,16 +44,16 @@ $(document).ready(function () {
         var guest = tableHelper.getSelectedRowData();
         bootboxConfirm("Are you sure you want to delete this guest?", function(result){
             if (result == true){
-            removeGuest(guest, function() {
-                toastr.success('Removed "' + guest.firstName + ' ' + guest.lastName + '" from Guests!');
-                updateTable();
-            }, handleError);}
+                removeGuest(guest, function() {
+                    toastr.success('Removed "' + guest.firstName + ' ' + guest.lastName + '" from Guests!');
+                    updateTable();
+                },
+                handleError);
+            }
             else{
-            $('#modal').modal('toggle');;}
-
-
+                $('#modal').modal('toggle');
+            }
         });
-
     });
     $('#guestForm').submit(function(event) {
         event.preventDefault();

@@ -34,8 +34,12 @@ public class AddressController {
     public Address editAddress(@RequestBody Address address) throws InvalidModelException {
         address.validate();
 
-        this.addressRepository.save(address);
-        return address;
+        try {
+            this.addressRepository.save(address);
+            return address;
+        } catch(DataIntegrityViolationException e){
+            throw new InvalidModelException("This address already exists!");
+        }
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
