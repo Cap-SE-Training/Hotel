@@ -1,7 +1,9 @@
-package com.capgemini.setrack;
+package com.capgemini.setrack.utility;
 
 import com.capgemini.setrack.exception.InvalidModelException;
 import com.capgemini.setrack.model.enums.ConstraintViolations;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.regex.Matcher;

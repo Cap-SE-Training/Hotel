@@ -1,6 +1,6 @@
 package com.capgemini.setrack.controller;
 
-import com.capgemini.setrack.ValidationUtility;
+import com.capgemini.setrack.utility.ValidationUtility;
 import com.capgemini.setrack.exception.InvalidModelException;
 import com.capgemini.setrack.exception.NotFoundException;
 import com.capgemini.setrack.model.Room;
@@ -8,7 +8,6 @@ import com.capgemini.setrack.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
