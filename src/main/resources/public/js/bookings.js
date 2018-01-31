@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     getBookings();
+    googleTranslateElementInit();
 
     table =  $('#table').DataTable({
         bLengthChange: false,

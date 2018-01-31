@@ -20,16 +20,16 @@ function DataTableHelper(element, options) {
 }
 
 _.extend(DataTableHelper.prototype, {
-    getElement() {
+    getElement: function() {
         return this.element;
     },
-    getDataTable() {
+    getDataTable: function() {
         return this.dataTable;
     },
-    getSelectedRowId() {
+    getSelectedRowId: function() {
         return this.selectedRowId;
     },
-    getSelectedRowData() {
+    getSelectedRowDataL: function() {
         if (!this.selectedRowId) {
             return;
         }
