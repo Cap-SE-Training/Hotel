@@ -14,7 +14,7 @@ public class RoomType {
     private long id;
 
     @JsonIgnore
-    @OneToMany(mappedBy="roomType", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="roomType")
     private Set<Room> rooms;
 
     @NotNull(message="A type is required!")

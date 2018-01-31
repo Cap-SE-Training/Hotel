@@ -1,6 +1,8 @@
 package com.capgemini.setrack.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,8 +26,10 @@ public class Guest {
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "booking_guest", joinColumns = {
-            @JoinColumn(name = "guest_id", referencedColumnName = "id") }, inverseJoinColumns = {
-            @JoinColumn(name = "booking_id", referencedColumnName = "id") })
+            @JoinColumn(name = "guest_id", referencedColumnName = "id", nullable=false) }, inverseJoinColumns = {
+            @JoinColumn(name = "booking_id", referencedColumnName = "id", nullable=false) },
+            foreignKey = @ForeignKey(name = "FK_GUEST_BOOKING"),
+            inverseForeignKey = @ForeignKey(name = "FK_BOOKING_GUEST"))
     private List<Booking> bookings;
 
     public Guest(){ }

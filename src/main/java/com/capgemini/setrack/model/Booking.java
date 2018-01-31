@@ -1,6 +1,8 @@
 package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.PaymentMethod;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,9 +23,11 @@ public class Booking {
     private PaymentMethod paymentMethod;
 
     @ManyToMany(mappedBy="bookings")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<Guest> guests;
 
     @ManyToMany(mappedBy="bookings")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<Room> rooms;
 
     public Booking() {}
