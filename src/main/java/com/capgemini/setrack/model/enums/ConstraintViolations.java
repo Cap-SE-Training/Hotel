@@ -6,7 +6,9 @@ public enum ConstraintViolations {
     ROOM_NAME("A room with this name already exists!"),
     BOOKING_ROOM("A booking has to have a room!"),
     BOOKING_GUEST("A booking has to be made by a guest!"),
-    ROOMTYPE_TYPE("This room type already exists!");
+    ROOMTYPE_TYPE("This room type already exists!"),
+    GUEST_ADDRESS("A guest has to have an address!"),
+    UK_ADDRESS_POSTALCODE_HOUSENUMBER("There is already an address with this postal code and house number!");
 
     private String message;
 

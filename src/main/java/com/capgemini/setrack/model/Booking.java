@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-public class Booking {
+public class Booking extends Model{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
