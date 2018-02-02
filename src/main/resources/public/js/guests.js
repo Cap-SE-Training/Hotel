@@ -116,7 +116,7 @@ function updateTable() {
 
     $('button.controls').prop('disabled', selectedId === undefined);
     ajaxJsonCall('GET', '/api/guests/', null, function(guests) {
-      tableHelper.dataTable.clear();
-      tableHelper.dataTable.rows.add(guests);
-      tableHelper.dataTable.columns.adjust().draw();}, null)
+      table.clear();
+      table.rows.add(guests);
+      table.columns.adjust().draw();}, null)
 }
