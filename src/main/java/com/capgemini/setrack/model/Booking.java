@@ -3,21 +3,27 @@ package com.capgemini.setrack.model;
 import com.capgemini.setrack.model.enums.PaymentMethod;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-public class Booking {
+public class Booking extends Model{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotNull(message="A starting date is required!")
     private LocalDateTime startDate;
+
+    @NotNull(message="An end date is required!")
     private LocalDateTime endDate;
+
     private LocalDateTime checkedIn;
     private LocalDateTime checkedOut;
     private LocalDateTime paid;
+
     private PaymentMethod paymentMethod;
 
     @ManyToMany(mappedBy="bookings")
