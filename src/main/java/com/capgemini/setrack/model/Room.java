@@ -2,6 +2,9 @@ package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.RoomStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 import javax.persistence.*;
@@ -12,13 +15,17 @@ import javax.validation.constraints.Size;
 
 
 @Entity
+@Table( name="Room", uniqueConstraints= {
+        @UniqueConstraint(name = "UK_ROOM_NAME", columnNames = {"name"}),
+        @UniqueConstraint(name = "UK_ROOM_NUMBER", columnNames = {"number"})
+})
 public class Room extends Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="room_type_id")
+    @JoinColumn(name="room_type_id", foreignKey=@ForeignKey(name = "FK_ROOM_ROOMTYPE"))
     @NotNull(message="A room type is required!")
     private RoomType roomType;
 
@@ -27,12 +34,10 @@ public class Room extends Model {
 
     @NotNull(message="A name is required!")
     @Size(min=2, max=30, message="A name must be between 2 and 30 characters long!")
-    @Column(unique=true)
     private String name;
 
     @NotNull(message="A number is required!")
     @Size(min=1, message="A number is required")
-    @Column(unique=true)
     private String number;
 
     @NotNull(message="A size is required!")
@@ -44,10 +49,14 @@ public class Room extends Model {
     private double price;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "booking_room", joinColumns = {
-            @JoinColumn(name = "room_id", referencedColumnName = "id") }, inverseJoinColumns = {
-            @JoinColumn(name = "booking_id", referencedColumnName = "id") })
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "booking_room",
+            joinColumns = {
+            @JoinColumn(
+                    name = "room_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_ROOM_BOOKING")
+            ) }, inverseJoinColumns = {
+            @JoinColumn(name = "booking_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_BOOKING_ROOM")
+            )})
     private List<Booking> bookings;
 
     public Room(){}
