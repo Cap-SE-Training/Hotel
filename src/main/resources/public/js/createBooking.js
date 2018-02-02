@@ -1,48 +1,93 @@
-var guestsContainer;
-var guestSelector;
+var tableHelperGuests;
+var tableElementGuests;
+var tableSelectedGuestId;
+var guestsSelector;
+var guests = [];
+
 var booking = {
     guests: [],
     rooms: []
 };
-var guests;
 
 $('document').ready(function() {
-    guestsContainer = $('#guestsContainer');
-    guestSelector = $('#guestSelector');
+    guestsSelector = $('#guestsSelector');
 
+    // Load DataTable with data format.
+    tableElementGuests = $('#guestsTable');
+    tableHelperGuests = new DataTableHelper(tableElementGuests, {
+        bLengthChange: false,
+        bInfo: false,
+        searching: false,
+        paging: false,
+        rowId: 'id',
+        columns: [
+            { "data": function( data, type, row ){
+                    return data.firstName + " " + data.lastName;
+                } },
+            { "data": "email" }
+        ]
+    });
+    // Retrieve all guests
+    ajaxJsonCall('GET', '/api/guests/', null, function(result) {
+        guests = result;
+    });
     $('#addGuest').on('click', function() {
-        $('#createGuestModal').modal('show');
+        $('#guestModal').modal('show');
     });
-
-    $('#findGuest').on('click', function() {
-        $('#findGuestModal').modal('show');
+    $('#removeGuest').on('click', function() {
+        var guestId = tableHelperGuests.getSelectedRowId();
+        tableHelperGuests.dataTable.row('#'+guestId).remove().draw();
+        booking.guests = _.filter(booking.guests, function(guest) {
+            return guest.id !== parseInt(guestId);
+        });
+    });
+    $('#findGuests').on('click', function() {
+        $('#findGuestsModal').modal('show');
+        guestsSelector.empty();
+        _.map(guests, function(guest) {
+            if (_.contains(_.pluck(booking.guests, 'id'), guest.id)) {
+                return;
+            }
+            var option = $('<option value="' + guest.id + '">' + guest.firstName + ' ' + guest.lastName + ' (' + guest.email + ')</option>');
+            guestsSelector.append(option);
+        });
+        guestsSelector.trigger("chosen:updated");
         setTimeout(function() {
-            guestSelector.chosen();
+            guestsSelector.chosen();
         }, 200);
-        ajaxJsonCall('GET', '/api/guests/', null, function(guests) {
-            _.map(guests, function(guest) {
-                var option = $('<option value="' + guest.id + '">' + guest.firstName + ' ' + guest.lastName + ' (' + guest.email + ')</option>');
-                guestSelector.html();
-                guestSelector.append(option);
-                guestSelector.trigger("chosen:updated");
-            });
-        }, handleError);
     });
-
     $('#guestForm').submit(function(event) {
         event.preventDefault();
-        var guest = {
-            firstName: $("#firstName").val(),
-            lastName: $("#lastName").val(),
-            email: $("#email").val(),
-            telephoneNumber: $("#telephoneNumber").val()
-        };
+        var guest = getFormData();
         ajaxJsonCall('POST', '/api/guests/create', guest, function(result) {
             $('#guestModal').modal('hide');
             toastr.success('Added "' + guest.firstName + ' ' + guest.lastName + '" to Guests!');
             $('#guestForm').get(0).reset();
-            guestsContainer.append(createGuestHtml(result));
+            tableHelperGuests.dataTable.row.add(result).draw();
+            booking.guests.push(result);
+            guests.push(result);
         }, handleError);
+    });
+
+    $('#findGuestsForm').submit(function(event) {
+        event.preventDefault();
+        $('#findGuestsModal').modal('hide');
+
+        var foundGuestIds = _.map(guestsSelector.val(), function(id) { return parseInt(id) });
+        var filteredGuestIds = _.filter(foundGuestIds, function(guestId) {
+            return !_.contains(_.pluck(booking.guests, 'id'), guestId);
+        });
+        var foundGuests = _.map(filteredGuestIds, function(id) {
+            return _.findWhere(guests, {
+                id: id
+            });
+        });
+        _.each(foundGuests, function(guest) {
+            tableHelperGuests.dataTable.row.add(guest).draw();
+            booking.guests.push(guest);
+        });
+        $('#findGuestsForm').get(0).reset();
+        guestsSelector.trigger("chosen:updated");
     });
 });
 
@@ -59,3 +104,18 @@ function createGuestHtml(guest) {
     return card;
 }
 
+function getFormData() {
+    return {
+        firstName : $("#firstName").val(),
+        lastName : $("#lastName").val(),
+        email : $("#email").val(),
+        telephoneNumber : $("#telephoneNumber").val(),
+        address: {
+            street : $("#street").val(),
+            houseNumber : $("#houseNumber").val(),
+            postalCode : $("#postalCode").val(),
+            city : $("#city").val(),
+            country : $("#country").val()
+        }
+    };
+}

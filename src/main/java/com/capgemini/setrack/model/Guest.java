@@ -25,7 +25,7 @@ public class Guest extends Model{
     @Size(min=2, max=30, message="A name must be between 2 and 30 characters long!")
     private String lastName;
 
-    @OneToOne(cascade=CascadeType.REMOVE)
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="address_id", foreignKey=@ForeignKey(name = "FK_GUEST_ADDRESS"))
     @NotNull(message = "Address is required!")
     private Address address;

@@ -15,7 +15,7 @@ public class Address extends Model{
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
-    @OneToOne(mappedBy = "address")
+    @OneToOne(mappedBy = "address", cascade=CascadeType.ALL)
     @JsonIgnore
     private Guest guest;
 

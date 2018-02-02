@@ -4,7 +4,7 @@ var selectedId;
 var edit = false;
 
 $(document).ready(function () {
-    console.log("Guest document ready")
+    console.log("Guest document ready");
 
     // Load DataTable with data format.
     tableElement = $('#guestsTable');
@@ -117,7 +117,6 @@ function createGuest(data, successCallback, errorCallback) {
 }
 
 function editGuest(data, successCallback, errorCallback) {
-
     console.log("Editing guest..")
     var editedAddress = {
         street: data.street,
