@@ -1,20 +1,39 @@
 package com.capgemini.setrack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
-public class Address {
+@Table( name="Address", uniqueConstraints= {
+        @UniqueConstraint(name = "UK_ADDRESS_POSTALCODE_HOUSENUMBER", columnNames = {"postalCode", "houseNumber"})
+})
+public class Address extends Model{
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
-    @OneToOne(mappedBy="address")
+    @OneToOne(mappedBy = "address")
+    @JsonIgnore
     private Guest guest;
 
+    @NotNull(message = "A street is required!")
     private String street;
+
+    @NotNull(message = "A house number is required!")
     private String houseNumber;
+
+    @Pattern(regexp="[0-9]{4}[A-Z]{2}",message="Postalcode should look like: '0000AA'")
+    @NotNull(message = "A postal code is required!")
     private String postalCode;
+
+    @Pattern(regexp="[a-zA-Z ]*",message="A city name must consist of letters found in the latin alphabet")
+    @NotNull(message = "A city is required!")
     private String city;
+
+    @NotNull(message = "A country is required!")
     private String country;
 
     public Address() { }
