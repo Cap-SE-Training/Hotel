@@ -1,9 +1,6 @@
 package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.PaymentMethod;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,11 +27,9 @@ public class Booking extends Model{
     private PaymentMethod paymentMethod;
 
     @ManyToMany(mappedBy="bookings")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<Guest> guests;
 
     @ManyToMany(mappedBy="bookings")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<Room> rooms;
 
     public Booking() {}

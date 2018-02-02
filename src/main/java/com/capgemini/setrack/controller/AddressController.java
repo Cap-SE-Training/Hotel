@@ -25,7 +25,7 @@ public class AddressController {
     public Address createAddress(@RequestBody Address address) throws InvalidModelException {
         address.validate();
 
-        try{
+        try {
             this.addressRepository.save(address);
             return address;
         } catch(DataIntegrityViolationException e){
@@ -56,7 +56,7 @@ public class AddressController {
         } catch(DataIntegrityViolationException e) {
             throw ValidationUtility.getInvalidModelException(e);
         } catch(EmptyResultDataAccessException e){
-            throw new NotFoundException("There is no guest with id " + id);
+            throw new NotFoundException("There is no address with id " + id);
         }
     }
 }
