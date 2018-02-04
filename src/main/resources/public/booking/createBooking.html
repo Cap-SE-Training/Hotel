@@ -44,11 +44,17 @@
     <link rel="stylesheet" href="/css/chosen.min.css">
     <script src="/js/libraries/chosen.jquery.min.js"></script>
 
+    <!-- Progress -->
+    <link rel="stylesheet" href="/css/progress.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
     <!-- Helpers -->
     <script src="/js/helpers/ajax.js"></script>
     <script src="/js/helpers/bootbox.js"></script>
     <script src="/js/helpers/dataTables.js"></script>
+    <script src="/js/helpers/progress.js"></script>
 
+    <!-- Page files -->
     <link rel="stylesheet" href="/css/createBooking.css">
     <script src="/js/createBooking.js"></script>
 </head>
@@ -84,38 +90,70 @@
     </div>
 </nav>
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6">
-            Startdate: <div id="startDatepicker"></div>
-        </div>
-        <div class="col-md-6">
-            Enddate: <div id="endDatepicker"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <h2>Guests</h2>
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary" id="findGuests">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-                <button type="button" class="btn btn-primary" id="addGuest">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-                <button type="button" class="btn btn-danger controls" id="removeGuest" disabled>
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
+    <h1 class="float-left">Create a booking</h1>
+    <div id="progressBar" class="prog row mb-5 float-right"></div>
+    <div class="clearfix"></div>
+    <form>
+        <div id="dates" style="display: none;">
+            <h2>Date(s)</h2>
+            <div class="form-group row">
+                <label for="fromDatepicker" class="col-2 col-form-label">From</label>
+                <div class="col-md-4">
+                    <input type="date" id="fromDatepicker" class="form-control"/>
+                </div>
             </div>
-            <table class="table table-bordered" id="guestsTable">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-                </thead>
-            </table>
+            <div class="form-group row">
+                <label for="toDatepicker" class="col-md-2 col-form-label">To</label>
+                <div class="col-md-4">
+                    <input type="date" id="toDatepicker" class="form-control"/>
+                </div>
+            </div>
         </div>
-    </div>
+        <div id="guests" style="display: none;">
+            <hr/>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Guests</h2>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-primary" id="findGuests">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="addGuest">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger controls" id="removeGuest" disabled>
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <table class="table table-bordered" id="guestsTable">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="rooms" style="display: none;">
+            <hr/>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Rooms</h2>
+                    <table class="table table-bordered" id="roomsTable">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <button role="button" type="button" class="btn btn-primary float-right" id="nextButton" disabled>Next</button>
+    </form>
 </div>
 
 <!-- Find guest modal -->

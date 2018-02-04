@@ -141,9 +141,9 @@ function updateTable() {
     ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
           tableHelper.dataTable.clear();
           tableHelper.dataTable.rows.add(rooms);
-          tableHelper.dataTable.columns.adjust().draw();}, null)
+          tableHelper.dataTable.columns.adjust().draw();
+      }, null);
 }
-
 
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
