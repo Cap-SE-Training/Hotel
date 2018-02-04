@@ -10,6 +10,22 @@ var booking = {
 };
 
 $('document').ready(function() {
+    var dateFormat = "mm/dd/yy";
+    var from = $( "#startDatepicker" ).datepicker({
+        defaultDate: "+1w",
+        changeMonth: true
+    });
+    var to = $( "#endDatepicker" ).datepicker({
+        defaultDate: "+1w",
+        changeMonth: true
+    });
+    from.on( "change", function() {
+        to.datepicker( "option", "minDate", getDate( this ) );
+    });
+    to.on( "change", function() {
+        from.datepicker( "option", "maxDate", getDate( this ) );
+    });
+
     guestsSelector = $('#guestsSelector');
 
     // Load DataTable with data format.
@@ -118,4 +134,15 @@ function getFormData() {
             country : $("#country").val()
         }
     };
+}
+
+function getDate( element ) {
+    var date;
+    try {
+        date = $.datepicker.parseDate( dateFormat, element.value );
+    } catch( error ) {
+        date = null;
+    }
+
+    return date;
 }
