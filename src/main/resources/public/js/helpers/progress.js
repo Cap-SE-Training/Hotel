@@ -1,9 +1,7 @@
-function Progress(container, previousButton, nextButton, steps) {
+function Progress(options) {
     var self = this;
 
-    self.container = container;
-    self.previousButton = previousButton;
-    self.nextButton = nextButton;
+    _.extend(self, options);
 
     self.nextButton.on('click', function() {
         self.next();
@@ -55,8 +53,36 @@ _.extend(Progress.prototype, {
         this.currentStep++;
         this.steps[this.currentStep - 1].container.show();
         this.steps[this.currentStep - 1].init();
+        this.setActive();
     },
     previous: function() {
 
+    },
+    setActive: function() {
+        var circles = $('.prog .circle');
+        circles.removeClass('done');
+        circles.removeClass('active');
+        for (var i = 0; i < this.currentStep; i++) {
+            $('.prog .circle.step' + i).addClass('done');
+        }
+        $('.prog .circle.step' + this.currentStep).addClass('active');
+        if (this.currentStep === this.steps.length) {
+            this.nextButton.html('Create!');
+        } else {
+            this.nextButton.html('Next');
+        }
+    },
+    setCurrentStep: function(step, init) {
+        init = init || false;
+
+        this.currentStep = step;
+        _.each(this.steps, function(step) {
+            step.container.hide();
+        });
+        this.steps[this.currentStep - 1].container.show();
+        if (init) {
+            this.steps[this.currentStep - 1].init();
+        }
+        this.setActive();
     }
 });

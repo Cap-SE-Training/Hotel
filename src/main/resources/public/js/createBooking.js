@@ -4,7 +4,11 @@ var booking = {
 };
 
 $('document').ready(function () {
-    var progress = new Progress($('#progressBar'), $('previousButton'), $('#nextButton'));
+    var progress = new Progress({
+        container: $('#progressBar'),
+        previousButton: $('previousButton'),
+        nextButton: $('#nextButton')
+    });
     progress.setSteps([{
         name: 'Date(s)',
         container: $('#dates'),
@@ -51,6 +55,7 @@ $('document').ready(function () {
             ajaxJsonCall('GET', '/api/guests/', null, function (result) {
                 guests = result;
             });
+
             var guestsSelector = $('#guestsSelector');
 
             // Load DataTable with data format.
@@ -97,7 +102,19 @@ $('document').ready(function () {
             });
             $('#guestForm').submit(function (event) {
                 event.preventDefault();
-                var guest = getFormData();
+                var guest = {
+                    firstName: $("#firstName").val(),
+                    lastName: $("#lastName").val(),
+                    email: $("#email").val(),
+                    telephoneNumber: $("#telephoneNumber").val(),
+                    address: {
+                        street: $("#street").val(),
+                        houseNumber: $("#houseNumber").val(),
+                        postalCode: $("#postalCode").val(),
+                        city: $("#city").val(),
+                        country: $("#country").val()
+                    }
+                };
                 ajaxJsonCall('POST', '/api/guests/create', guest, function (result) {
                     $('#guestModal').modal('hide');
                     toastr.success('Added "' + guest.firstName + ' ' + guest.lastName + '" to Guests!');
@@ -139,67 +156,62 @@ $('document').ready(function () {
         name: 'Room(s)',
         container: $('#rooms'),
         init: function () {
-            var rooms = [];
-            // Retrieve all guests
-            ajaxJsonCall('GET', '/api/rooms/', null, function (result) {
-                rooms = result;
-            });
+            // Load DataTable with data format.
+            var tableElementRooms = $('#roomsTable');
+            var tableHelperRooms = new DataTableHelper(tableElementRooms, {
+                bLengthChange: false,
+                bInfo: false,
+                searching: false,
+                paging: false,
+                rowId: 'id',
+                columnDefs: [ {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0
+                }],
+                select: {
+                    style:    'os',
+                    selector: 'td:first-child'
+                },
+                columns: [
+                    {
+                        "data": null,
+                        render: function( data, type, row ) {
+                            if ( type === 'display' ) {
+                                return '<input type="checkbox" class="select-checkbox">';
+                            }
+                            return data;
+                        },
+                        className: "dt-body-center"
+                    },
+                    { "data": "name" },
+                    { "data": "number" },
+                    { "data": "roomType.type" },
+                    { "data": "size" },
+                    { "data": "price" }
+                ]
+            }, true);
+            ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
+                tableHelperRooms.dataTable.clear();
+                tableHelperRooms.dataTable.rows.add(rooms);
+                tableHelperRooms.dataTable.columns.adjust().draw();
+                $('input[type="checkbox"].select-checkbox').on('change', function(event) {
+                    var rowId = $(event.currentTarget).closest('tr').attr('id');
+                    var room = tableHelperRooms.dataTable.row('#' + rowId).data();
+                    if ($(this).prop('checked')) {
+                        booking.rooms.push(room);
+                    } else {
+                        booking.rooms = _.filter(booking.rooms, function (bookingRoom) {
+                            return bookingRoom.id !== room.id;
+                        });
+                    }
+                    progress.check();
+                });
+            }, null);
+        },
+        check: function() {
+            return booking.rooms.length > 0;
         }
     }]);
+    progress.setCurrentStep(3, true);
 });
-
-function checkStep1() {
-
-}
-function checkStep2() {
-    return booking.guests.length > 0;
-}
-
-function createGuestHtml(guest) {
-    var card = $('<div class="card col-6"></div>');
-    var cardBody = $('<div class="card-body"></div>');
-    var cardTitle = $('<h5 class="card-title"></div>');
-    cardTitle.append(guest.firstName + ' ' + guest.lastName);
-    var cardSubtitle = $('<h6 class="card-subtitle mb-2 text-muted"></h6>');
-    cardSubtitle.append(guest.email);
-    cardBody.append(cardTitle);
-    cardBody.append(cardSubtitle);
-    card.append(cardBody);
-    return card;
-}
-
-function getFormData() {
-    return {
-        firstName: $("#firstName").val(),
-        lastName: $("#lastName").val(),
-        email: $("#email").val(),
-        telephoneNumber: $("#telephoneNumber").val(),
-        address: {
-            street: $("#street").val(),
-            houseNumber: $("#houseNumber").val(),
-            postalCode: $("#postalCode").val(),
-            city: $("#city").val(),
-            country: $("#country").val()
-        }
-    };
-}
-
-function getDate(element) {
-    var date;
-    try {
-        date = $.datepicker.parseDate(dateFormat, element.value);
-    } catch (error) {
-        date = null;
-    }
-
-    return date;
-}
-
-function setProgressionBar(step) {
-    $('.prog .circle').removeClass('done');
-    $('.prog .circle').removeClass('active');
-    for (var i = 0; i < step; i++) {
-        $('.prog .circle.step' + i).addClass('done');
-    }
-    $('.prog .circle.step' + step).addClass('active');
-}
