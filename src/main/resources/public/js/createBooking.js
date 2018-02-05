@@ -11,7 +11,8 @@ $('document').ready(function () {
         finish: function() {
             ajaxJsonCall('POST', '/api/bookings/create', booking, function (result) {
                 toastr.success('Successfully added a booking!');
-            }, handleError);
+                window.location.href = '/bookings.html';
+                }, handleError);
         }
     });
     progress.setSteps([{
