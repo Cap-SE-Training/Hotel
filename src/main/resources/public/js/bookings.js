@@ -11,37 +11,31 @@ $(document).ready(function () {
             { "data": "guests.0.firstName" },
             { "data": "guests.0.lastName" },
             //https://legacy.datatables.net/ref#mData
-            { "mData": function date(data, type, dataToSet) {
-                    return formatDate(data.startDate);
-                }
+            {
+                "data": "startDate",
+                render: formatDateColumn
             },
-            { "mData": function date(data, type, dataToSet) {
-                    return formatDate(data.endDate);
-                }
+            {
+                "data": "endDate",
+                render: formatDateColumn
             },
-            { "mData": function date(data, type, dataToSet) {
-                    return formatDate(data.checkedIn);
-                }
-            },
-            { "mData": function date(data, type, dataToSet) {
-                    return formatDate(data.checkedOut);
-                }
-            },
-            { "mData": function date(data, type, dataToSet) {
-                    return formatDate(data.paid);
+            {
+                "data": null,
+                "mData": function ( source, type, val ) {
+                    return moment(source.endDate).diff(source.startDate, 'days') + ' days';
                 }
             },
             { "data": "paymentMethod" }
         ]
     });
-})
+});
 
-function formatDate(date){
-    if(date){
-        return date.dayOfMonth + "-" + date.monthValue + "-" + date.year;
-    } else {
-        return null;
+function formatDateColumn(d) {
+    if (!d) {
+        return;
     }
+
+    return moment(d).format("DD/MM/YYYY");
 }
 
 function getBookings() {
@@ -51,7 +45,7 @@ function getBookings() {
         url:"/api/bookings/",
         type:"get",
         success: function(bookings) {
-            console.log("This is the data: " + bookings);
+            console.log("This is the data: ", bookings);
             table.clear();
             table.rows.add(bookings);
             table.columns.adjust().draw();
