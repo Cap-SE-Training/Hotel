@@ -1,35 +1,38 @@
-function DataTableHelper(element, options) {
+function DataTableHelper(element, options, noSelection) {
     var self = this;
 
     self.element = element;
     self.dataTable = element.DataTable(options);
+    self.selection = !noSelection || false;
 
-    // Select row handler
-    element.on('click', 'tr', function() {
-        self.element.find('tr.selected').removeClass('selected');
-        var id = self.dataTable.row(this).id();
-        if (id !== self.selectedRowId) {
-            $(this).addClass('selected');
-            self.selectedRowId = self.dataTable.row( this ).id();
-        } else {
-            self.selectedRowId = undefined;
-        }
+    if (self.selection) {
+        // Select row handler
+        element.on('click', 'tr', function () {
+            self.element.find('tr.selected').removeClass('selected');
+            var id = self.dataTable.row(this).id();
+            if (id !== self.selectedRowId) {
+                $(this).addClass('selected');
+                self.selectedRowId = self.dataTable.row(this).id();
+            } else {
+                self.selectedRowId = undefined;
+            }
 
-        $('button.controls').prop('disabled', self.selectedRowId === undefined);
-    });
+            $('button.controls').prop('disabled', self.selectedRowId === undefined);
+        });
+    }
 }
 
 _.extend(DataTableHelper.prototype, {
-    getElement() {
+    getElement: function() {
         return this.element;
     },
-    getDataTable() {
+    getDataTable: function() {
         return this.dataTable;
     },
-    getSelectedRowId() {
+    getSelectedRowId: function() {
         return this.selectedRowId;
     },
-    getSelectedRowData() {
+    getSelectedRowData: function() {
         if (!this.selectedRowId) {
             return;
         }
