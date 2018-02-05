@@ -8,7 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -49,15 +49,8 @@ public class Room extends Model {
     private double price;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "booking_room",
-            joinColumns = {
-            @JoinColumn(
-                    name = "room_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_ROOM_BOOKING")
-            ) }, inverseJoinColumns = {
-            @JoinColumn(name = "booking_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_BOOKING_ROOM")
-            )})
-    private List<Booking> bookings;
+    @ManyToMany(mappedBy = "rooms", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Booking> bookings;
 
     public Room(){}
 
@@ -70,11 +63,11 @@ public class Room extends Model {
         this.roomStatus = RoomStatus.AVAILABLE;
     }
 
-    public List<Booking> getBookings() {
+    public Set<Booking> getBookings() {
         return bookings;
     }
 
-    public void setBookings(List<Booking> bookings) {
+    public void setBookings(Set<Booking> bookings) {
         this.bookings = bookings;
     }
 
