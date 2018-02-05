@@ -167,7 +167,7 @@ public class GuestControllerTest {
     }
 
     @Test
-    public void testDeleteGuestEmptyResultDataAccessException() throws Exception {
+    public void testDeleteGuestExpectEmptyResultDataAccessException() throws Exception {
         Mockito.doThrow(new EmptyResultDataAccessException(1)).when(guestRepository).delete(Mockito.anyLong());
 
         this.mockMvc.perform(delete("/api/guests/delete/1"))
@@ -178,7 +178,7 @@ public class GuestControllerTest {
     }
 
     @Test
-    public void testDeleteGuestDataIntegrityViolationException() throws Exception {
+    public void testDeleteGuestExpectDataIntegrityViolationException() throws Exception {
         Mockito.doThrow(new DataIntegrityViolationException("DataIntegrityViolationException")).when(guestRepository).delete(Mockito.anyLong());
 
         this.mockMvc.perform(delete("/api/guests/delete/1"))
@@ -186,5 +186,89 @@ public class GuestControllerTest {
                 .andExpect(status().is4xxClientError());
 
         Mockito.verify(guestRepository,times(0)).delete((long)2);
+    }
+
+    @Test
+    public void testCreateGuestExpectDataIntegrityViolationException() throws Exception {
+        Address address = new Address("Haarlemmerstraat", "10", "1234AB", "Amsterdam", "Nederland");
+        Guest guest = new Guest("Kees", "Pieterson", address, "keespieterson@hotmail.com", "06123454567");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(guest);
+
+        Mockito.doThrow(new DataIntegrityViolationException("DataIntegrityViolationException")).when(guestRepository).save(Mockito.any(Guest.class));
+
+
+//        Mockito.when(guestRepository.save(Mockito.any(Guest.class))).thenReturn(guest);
+
+        this.mockMvc.perform(post("/api/guests/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+        Mockito.verify(guestRepository,times(1)).save(Mockito.any(Guest.class));
+    }
+
+    @Test
+    public void testCreateGuestExpectException() throws Exception {
+        Address address = new Address("Haarlemmerstraat", "10", "1234AB", "Amsterdam", "Nederland");
+        Guest guest = new Guest("Kees", "Pieterson", address, "keespieterson@hotmail.com", "06123454567");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(guest);
+
+        Mockito.doThrow(new ArrayIndexOutOfBoundsException("Exception")).when(guestRepository).save(Mockito.any(Guest.class));
+
+
+//        Mockito.when(guestRepository.save(Mockito.any(Guest.class))).thenReturn(guest);
+
+        this.mockMvc.perform(post("/api/guests/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+        Mockito.verify(guestRepository,times(1)).save(Mockito.any(Guest.class));
+    }
+
+    @Test
+    public void testUpdateGuestExpectDataIntegrityViolationException() throws Exception {
+        Address address = new Address("Haarlemmerstraat", "10", "1234AB", "Amsterdam", "Nederland");
+        Guest guest = new Guest("Kees", "Pieterson", address, "keespieterson@hotmail.com", "06123454567");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(guest);
+
+        Mockito.doThrow(new DataIntegrityViolationException("DataIntegrityViolationException")).when(guestRepository).save(Mockito.any(Guest.class));
+
+
+//        Mockito.when(guestRepository.save(Mockito.any(Guest.class))).thenReturn(guest);
+
+        this.mockMvc.perform(post("/api/guests/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+        Mockito.verify(guestRepository,times(1)).save(Mockito.any(Guest.class));
+    }
+
+    @Test
+    public void testUpdateGuestExpectException() throws Exception {
+        Address address = new Address("Haarlemmerstraat", "10", "1234AB", "Amsterdam", "Nederland");
+        Guest guest = new Guest("Kees", "Pieterson", address, "keespieterson@hotmail.com", "06123454567");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(guest);
+
+        Mockito.doThrow(new ArrayIndexOutOfBoundsException("Exception")).when(guestRepository).save(Mockito.any(Guest.class));
+
+
+//        Mockito.when(guestRepository.save(Mockito.any(Guest.class))).thenReturn(guest);
+
+        this.mockMvc.perform(post("/api/guests/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+        Mockito.verify(guestRepository,times(1)).save(Mockito.any(Guest.class));
     }
 }
