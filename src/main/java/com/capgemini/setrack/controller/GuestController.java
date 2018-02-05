@@ -23,6 +23,7 @@ public class GuestController {
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public Guest createGuest(@RequestBody Guest guest) throws InvalidModelException {
+        guest.getAddress().validate();
         guest.validate();
 
         try{
@@ -31,12 +32,13 @@ public class GuestController {
         } catch(DataIntegrityViolationException e){
             throw ValidationUtility.getInvalidModelException(e);
         } catch(Exception e){
-            throw new InvalidModelException("Something went wrong!");
+            throw new InvalidModelException("Something went wrong!"+e.getMessage().toString());
         }
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     public Guest updateGuest(@RequestBody Guest guest) throws InvalidModelException {
+        guest.getAddress().validate();
         guest.validate();
 
         try{
