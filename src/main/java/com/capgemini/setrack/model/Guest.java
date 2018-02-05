@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Guest extends Model{
@@ -25,7 +25,7 @@ public class Guest extends Model{
     @Size(min=2, max=30, message="A name must be between 2 and 30 characters long!")
     private String lastName;
 
-    @OneToOne(cascade=CascadeType.REMOVE)
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="address_id", foreignKey=@ForeignKey(name = "FK_GUEST_ADDRESS"))
     @NotNull(message = "Address is required!")
     private Address address;
@@ -38,14 +38,9 @@ public class Guest extends Model{
     @Size(min = 10, max = 15)
     private String telephoneNumber;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "booking_guest", joinColumns = {
-            @JoinColumn(name = "guest_id", referencedColumnName = "id", nullable=false) }, inverseJoinColumns = {
-            @JoinColumn(name = "booking_id", referencedColumnName = "id", nullable=false) },
-            foreignKey = @ForeignKey(name = "FK_GUEST_BOOKING"),
-            inverseForeignKey = @ForeignKey(name = "FK_BOOKING_GUEST"))
     @JsonIgnore
-    private List<Booking> bookings;
+    @ManyToMany(mappedBy = "guests", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Booking> bookings;
 
     public Guest(){ }
 
@@ -111,12 +106,14 @@ public class Guest extends Model{
         this.telephoneNumber = telephoneNumber;
     }
 
-    public List<Booking> getBookings() {
+    public Set<Booking> getBookings() {
         return bookings;
     }
 
-    public void setBookings(List<Booking> bookings) {
+    public void setBookings(Set<Booking> bookings) {
         this.bookings = bookings;
     }
+
+
 }
 
