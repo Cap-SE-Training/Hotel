@@ -49,6 +49,11 @@ _.extend(Progress.prototype, {
         this.steps[this.currentStep - 1].init();
     },
     next: function() {
+        if (this.currentStep === this.steps.length) {
+            this.finish();
+            return;
+        }
+
         this.steps[this.currentStep - 1].container.hide();
         this.currentStep++;
         this.steps[this.currentStep - 1].container.show();

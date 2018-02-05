@@ -7,7 +7,12 @@ $('document').ready(function () {
     var progress = new Progress({
         container: $('#progressBar'),
         previousButton: $('previousButton'),
-        nextButton: $('#nextButton')
+        nextButton: $('#nextButton'),
+        finish: function() {
+            ajaxJsonCall('POST', '/api/bookings/create', booking, function (result) {
+                toastr.success('Successfully added a booking!');
+            }, handleError);
+        }
     });
     progress.setSteps([{
         name: 'Date(s)',
@@ -25,7 +30,7 @@ $('document').ready(function () {
                 if (!to.val() || new Date(to.val()).getTime() >= date.getTime()) {
                     to.attr("min", value);
                 }
-                booking.startDate = date;
+                booking.startDate = date.getTime();
                 progress.check();
             });
 
@@ -39,12 +44,12 @@ $('document').ready(function () {
                 if (!from.val() || new Date(from.val()).getTime() <= date.getTime()) {
                     from.attr("max", value);
                 }
-                booking.endDate = date;
+                booking.endDate = date.getTime();
                 progress.check();
             });
         },
         check: function() {
-            return booking.startDate && booking.endDate && (booking.startDate.getTime() <= booking.endDate.getTime());
+            return booking.startDate && booking.endDate && (booking.startDate <= booking.endDate);
         }
     }, {
         name: 'Guest(s)',
@@ -213,5 +218,4 @@ $('document').ready(function () {
             return booking.rooms.length > 0;
         }
     }]);
-    progress.setCurrentStep(3, true);
 });
