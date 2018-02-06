@@ -9,7 +9,8 @@
     <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous">
+    </script>
 
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="/css/bookings.css">
@@ -31,19 +32,30 @@
     <!-- Font Awesome -->
     <script src="https://use.fontawesome.com/cb275ec490.js"></script>
 
+    <!-- Javascript file -->
+    <script src="/js/bookings.js"></script>
+
     <!-- Bootbox -->
     <script src="/js/libraries/bootbox.min.js"></script>
 
     <!-- Toastr Config -->
     <script src="/js/toastr.js"></script>
+    <script src="/js/libraries/underscore-min.js"></script>
 
+
+    <!-- Helpers -->
+    <script src="/js/helpers/ajax.js"></script>
+    <script src="/js/helpers/bootbox.js"></script>
+    <script src="/js/helpers/dataTables.js"></script>
+  
     <!-- momentjs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 
     <script src="/js/bookings.js"></script>
+  
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-10">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-primary mb-10">
         <a class="navbar-brand" href="#">Bookings</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -71,6 +83,9 @@
                     </div>
                 </li>
             </ul>
+            <button class="add-booking btn btn-primary">
+                <a class="nav-link" href="/newbooking.html">New Booking</a>
+            </button>
         </div>
     </nav>
     <div class="container mt-5">
@@ -87,7 +102,7 @@
                         </i>
                     </button>
                 </div>
-                <table id="table" class="table table-bordered">
+                <table id="bookingsTable" class="table table-bordered">
                     <thead>
                     <tr>
                         <th>Room ID</th>
@@ -101,11 +116,6 @@
                     </thead>
                 </table>
             </div>
-            <button type="button" class="new-booking btn btn-primary">
-                <a class="new-booking" href="/newbooking.html">
-                    <h4>New Booking</h4>
-                </a>
-            </button>
         </div>
     </div>
 </body>

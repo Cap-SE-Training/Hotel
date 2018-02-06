@@ -1,5 +1,6 @@
 package com.capgemini.setrack.model;
-
+import com.capgemini.setrack.converter.LocalDateTimeDeserializer;
+import com.capgemini.setrack.converter.LocalDateTimeSerializer;
 import com.capgemini.setrack.model.enums.PaymentMethod;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -24,7 +25,6 @@ public class Booking extends Model{
 
     @NotNull(message="An end date is required!")
     private LocalDateTime endDate;
-
     private LocalDateTime checkedIn;
     private LocalDateTime checkedOut;
     private LocalDateTime paid;
