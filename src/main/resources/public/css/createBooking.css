@@ -1,7 +1,7 @@
 #guestsSelector {
     width: 100%;
 }
-#nextButton {
+#nextButton, #previousButton {
     margin-top: 20px;
 }
 .btn-group {

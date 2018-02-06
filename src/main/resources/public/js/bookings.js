@@ -11,7 +11,8 @@ $(document).ready(function () {
         bLengthChange: false,
         rowId: 'id',
         columns: [
-            { "data": "rooms.0.id" },
+            { "data": "rooms.0.name" },
+            { "data": "rooms.0.number" },
             { "data": "guests.0.firstName" },
             { "data": "guests.0.lastName" },
             //https://legacy.datatables.net/ref#mData
@@ -28,8 +29,7 @@ $(document).ready(function () {
                 "mData": function ( source, type, val ) {
                     return moment(source.endDate).diff(source.startDate, 'days') + ' days';
                 }
-            },
-            { "data": "paymentMethod" }
+            }
         ]
     });
     $('#remove').on('click', function(event) {
