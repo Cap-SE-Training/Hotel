@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 public interface RoomRepository extends CrudRepository<Room, Long>, JpaSpecificationExecutor {
     @Query("SELECT r1 FROM Room r1 WHERE r1.id NOT IN " +
                 "(SELECT r.id FROM Room r INNER JOIN r.bookings b where " +
-                "(b.startDate BETWEEN :startDate AND :endDate) OR (b.endDate BETWEEN :startDate AND :endDate))")
+                "(b.startDate BETWEEN :startDate AND :endDate) OR (b.endDate BETWEEN :startDate AND :endDate) OR " +
+                "(b.startDate <= :startDate AND b.endDate >= :endDate))")
     Iterable<Room> findAvailableRoomsBetweenDates(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT r1 FROM Room r1 WHERE r1.id NOT IN " +

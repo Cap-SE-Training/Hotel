@@ -11,6 +11,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @RestController
@@ -70,10 +72,13 @@ public class RoomController {
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
     public Iterable<Room> getAvailableRooms(
-            @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime fromDate,
-            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime toDate,
+            @RequestParam("from") long from,
+            @RequestParam("to") long to,
             @RequestParam(name="size", required=false) Integer size,
             @RequestParam(name="room_type_id", required=false) Long room_type_id) {
+
+        LocalDateTime fromDate = new Timestamp(from).toLocalDateTime().minusHours(1);
+        LocalDateTime toDate = new Timestamp(to).toLocalDateTime().minusHours(1);
 
         if(size == null && room_type_id == null){
             return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate);
