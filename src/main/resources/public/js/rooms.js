@@ -33,6 +33,7 @@ $(document).ready(function() {
     });
 
     updateTable();
+    googleTranslateElementInit();
 
     $('#create').on('click', function(event) {
         $('#roomModal .modal-title').html('Creating a room');

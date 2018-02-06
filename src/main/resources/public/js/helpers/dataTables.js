@@ -32,7 +32,9 @@ _.extend(DataTableHelper.prototype, {
     getSelectedRowId: function() {
         return this.selectedRowId;
     },
-    getSelectedRowData: function() {
+
+    getSelectedRowDataL: function() {
+
         if (!this.selectedRowId) {
             return;
         }

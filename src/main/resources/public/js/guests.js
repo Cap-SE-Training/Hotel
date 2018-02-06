@@ -27,6 +27,7 @@ $(document).ready(function () {
     });
 
     updateTable();
+    googleTranslateElementInit();
 
     $('#create').on('click', function(event) {
         $('#guestModal .modal-title').html('Creating a guest');
