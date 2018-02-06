@@ -7,9 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Entity
-//@Table( name="Address", uniqueConstraints= {
-//        @UniqueConstraint(name = "UK_ADDRESS_POSTALCODE_HOUSENUMBER", columnNames = {"postalCode", "houseNumber"})
-//})
+
 public class Address extends Model{
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
