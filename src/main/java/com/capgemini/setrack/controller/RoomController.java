@@ -1,14 +1,19 @@
 package com.capgemini.setrack.controller;
 
-import com.capgemini.setrack.utility.ValidationUtility;
 import com.capgemini.setrack.exception.InvalidModelException;
 import com.capgemini.setrack.exception.NotFoundException;
 import com.capgemini.setrack.model.Room;
 import com.capgemini.setrack.repository.RoomRepository;
+import com.capgemini.setrack.utility.ValidationUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/rooms/")
@@ -63,5 +68,26 @@ public class RoomController {
     @RequestMapping(value = "sizes", method = RequestMethod.GET)
     public Iterable<Integer> getAllRoomSizes() {
         return roomRepository.findDistinctRoomSizes();
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.GET)
+    public Iterable<Room> getAvailableRooms(
+            @RequestParam("from") long from,
+            @RequestParam("to") long to,
+            @RequestParam(name="size", required=false) Integer size,
+            @RequestParam(name="room_type_id", required=false) Long room_type_id) {
+
+        LocalDateTime fromDate = new Timestamp(from).toLocalDateTime().minusHours(1);
+        LocalDateTime toDate = new Timestamp(to).toLocalDateTime().minusHours(1);
+
+        if(size == null && room_type_id == null){
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate);
+        } else if (size == null) {
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate, room_type_id);
+        } else if (room_type_id == null){
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate, size);
+        } else{
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate, size, room_type_id);
+        }
     }
 }

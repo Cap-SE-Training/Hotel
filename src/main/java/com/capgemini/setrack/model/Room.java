@@ -2,17 +2,12 @@ package com.capgemini.setrack.model;
 
 import com.capgemini.setrack.model.enums.RoomStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 
 import javax.persistence.*;
-import java.util.Set;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+import java.util.Set;
 
 @Entity
 @Table( name="Room", uniqueConstraints= {
