@@ -32,9 +32,15 @@ public class Booking extends Model{
     private PaymentMethod paymentMethod;
 
     @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "booking_guest", joinColumns = {
+            @JoinColumn(name = "booking_id", referencedColumnName = "id") }, inverseJoinColumns = {
+            @JoinColumn(name = "guest_id", referencedColumnName = "id") })
     private Set<Guest> guests;
 
     @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "booking_room", joinColumns = {
+            @JoinColumn(name = "booking_id", referencedColumnName = "id") }, inverseJoinColumns = {
+            @JoinColumn(name = "room_id", referencedColumnName = "id") })
     private Set<Room> rooms;
 
     public Booking() {}
