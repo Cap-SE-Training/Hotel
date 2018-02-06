@@ -1,3 +1,5 @@
+package com.capgemini.setrack.controller;
+
 import com.capgemini.setrack.controller.RoomController;
 import com.capgemini.setrack.exception.InvalidModelException;
 import com.capgemini.setrack.model.Room;
@@ -75,9 +77,10 @@ public class RoomControllerTests {
     }
 
     @Test
-    public void testCreateRoomWithInvalidRoomSizeExpectError() throws Exception {
+    public void testCreateRoom() throws Exception {
         RoomType roomType = new RoomType("luxe");
-        Room room = new Room("Test Room", "1a", roomType, -1, 10);
+        Room room = new Room("Test Room", "1a", roomType, 1, 10);
+
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(room);
 
@@ -87,28 +90,16 @@ public class RoomControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(jsonPath("$.id", is((int) room.getId())))
+                .andExpect(jsonPath("$.name", is(room.getName())))
+                .andExpect(jsonPath("$.number", is(room.getNumber())))
+                .andExpect(jsonPath("$.roomType.id", is((int) room.getRoomType().getId())))
+                .andExpect(jsonPath("$.roomType.type", is(room.getRoomType().getType())))
+                .andExpect(jsonPath("$.size", is(room.getSize())))
+                .andExpect(jsonPath("$.price", is((room.getPrice()))))
+                .andExpect(status().isOk());
 
-        Mockito.verify(roomRepository, times(0)).save(Mockito.any(Room.class));
-
-    }
-
-    @Test
-    public void testEditRoomWithInvalidRoomSizeExpectError() throws Exception {
-        RoomType roomType = new RoomType("luxe");
-        Room room = new Room("test", "250A", roomType, -1, 250);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(room);
-
-        Mockito.when(roomRepository.save(Mockito.any(Room.class))).thenReturn(room);
-
-        this.mockMvc.perform(post("/api/rooms/edit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andDo(print())
-                .andExpect(status().is4xxClientError());
-
-        Mockito.verify(roomRepository, times(0)).save(Mockito.any(Room.class));
+        Mockito.verify(roomRepository, times(1)).save(Mockito.any(Room.class));
     }
 
     @Test
@@ -130,16 +121,83 @@ public class RoomControllerTests {
     }
 
     @Test
-    public void testDeleteRoomWithErrorHandling() throws Exception {
+    public void testCreateRoomExpectException() throws Exception {
+        RoomType roomType = new RoomType("luxe");
+        Room room = new Room("Chill Room", "23A", roomType, 6, 150);
 
-        Mockito.doThrow(new EmptyResultDataAccessException(1)).when(roomRepository).delete(Mockito.anyLong());
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(room);
 
-        this.mockMvc.perform(delete("/api/rooms/delete/1")
-                .contentType(MediaType.APPLICATION_JSON))
+        Mockito.doThrow(new ArrayIndexOutOfBoundsException("Exception")).when(roomRepository).save(Mockito.any(Room.class));
+
+        this.mockMvc.perform(post("/api/rooms/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
 
-        Mockito.verify(roomRepository, times(0)).delete((long) 2);
+        Mockito.verify(roomRepository, times(1)).save(Mockito.any(Room.class));
+    }
+
+    @Test
+    public void testUpdateRoom() throws Exception {
+        RoomType roomType = new RoomType("basic");
+        Room room = new Room("Chekov Room", "350LK", roomType, 8, 50);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(room);
+
+        when(roomRepository.save(Mockito.any(Room.class))).thenReturn(room);
+
+        this.mockMvc.perform(post("/api/rooms/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(jsonPath("$.name", is(room.getName())))
+                .andExpect(jsonPath("$.number", is(room.getNumber())))
+                .andExpect(jsonPath("$.roomType.type", is((room.getRoomType().getType()))))
+                .andExpect(jsonPath("$.size", is(room.getSize())))
+                .andExpect(jsonPath("$.price", is(room.getPrice())))
+                .andExpect(status().isOk());
+
+        Mockito.verify(roomRepository, times(1)).save(Mockito.any(Room.class));
+    }
+
+    @Test
+    public void testUpdateRoomWithDataIntegrityViolationException() throws Exception {
+        RoomType nonExistingRoomType = new RoomType("luxe");
+        Room room = new Room("Test Room", "1a", nonExistingRoomType, 6, 10);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(room);
+
+        Mockito.when(roomRepository.save(Mockito.any(Room.class))).thenThrow(new DataIntegrityViolationException("Oh no!"));
+
+        this.mockMvc.perform(post("/api/rooms/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+
+        Mockito.verify(roomRepository, times(1)).save(Mockito.any(Room.class));
+    }
+
+    @Test
+    public void testUpdateRoomExpectException() throws Exception {
+        RoomType roomType = new RoomType("luxe");
+        Room room = new Room("test", "250A", roomType, 6, 250);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(room);
+
+        Mockito.doThrow(new ArrayIndexOutOfBoundsException("Exception")).when(roomRepository).save(Mockito.any(Room.class));
+
+        this.mockMvc.perform(post("/api/rooms/edit")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+
+        Mockito.verify(roomRepository, times(1)).save(Mockito.any(Room.class));
     }
 
     @Test
@@ -156,27 +214,26 @@ public class RoomControllerTests {
     }
 
     @Test
-    public void testCreateRoom() throws Exception {
-        RoomType roomType = new RoomType("luxe");
-        Room room = new Room("Test Room", "1a", roomType, 1, 10);
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(room);
+    public void testDeleteRoomWithDataIntegrityViolationException() throws Exception {
+        Mockito.doThrow(new DataIntegrityViolationException("DataIntegrityViolationException")).when(roomRepository).delete(Mockito.anyLong());
 
-        Mockito.when(roomRepository.save(Mockito.any(Room.class))).thenReturn(room);
-
-        this.mockMvc.perform(post("/api/rooms/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        this.mockMvc.perform(delete("/api/rooms/delete/1"))
                 .andDo(print())
-                .andExpect(jsonPath("$.id", is((int) room.getId())))
-                .andExpect(jsonPath("$.name", is(room.getName())))
-                .andExpect(jsonPath("$.number", is(room.getNumber())))
-                .andExpect(jsonPath("$.roomType.id", is((int) room.getRoomType().getId())))
-                .andExpect(jsonPath("$.roomType.type", is(room.getRoomType().getType())))
-                .andExpect(jsonPath("$.size", is((int) room.getSize())))
-                .andExpect(jsonPath("$.price", is((double) room.getPrice())))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
 
-        Mockito.verify(roomRepository, times(1)).save(Mockito.any(Room.class));
+        Mockito.verify(roomRepository, times(0)).delete((long) 2);
+    }
+
+    @Test
+    public void testDeleteRoomWithErrorHandling() throws Exception {
+
+        Mockito.doThrow(new EmptyResultDataAccessException(1)).when(roomRepository).delete(Mockito.anyLong());
+
+        this.mockMvc.perform(delete("/api/rooms/delete/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+
+        Mockito.verify(roomRepository, times(0)).delete((long) 2);
     }
 }
