@@ -8,7 +8,8 @@ public enum ConstraintViolations {
     BOOKING_GUEST("A booking has to be made by a guest!"),
     ROOMTYPE_TYPE("This room type already exists!"),
     GUEST_ADDRESS("A guest has to have an address!"),
-    ADDRESS_POSTALCODE_HOUSENUMBER("There is already an address with this postal code and house number!");
+    ADDRESS_POSTALCODE_HOUSENUMBER("There is already an address with this postal code and house number!"),
+    GUEST("A guest with this document number does already exist");
 
     private String message;
 
