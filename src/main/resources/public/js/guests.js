@@ -4,7 +4,7 @@ var selectedId;
 var edit = false;
 
 $(document).ready(function () {
-    console.log("Guest document ready")
+    console.log("Guest document ready");
 
     // Load DataTable with data format.
     tableElement = $('#guestsTable');
@@ -15,9 +15,14 @@ $(document).ready(function () {
            { "data": function( data, type, row ){
                 return data.firstName + " " + data.lastName;
            } },
-           //{ "data": "address" },
            { "data": "email" },
            { "data": "telephoneNumber" },
+           { "data": function( data, type, row ){
+               return data.address.street + " " + data.address.houseNumber;
+           } },
+           { "data": "address.postalCode" },
+           { "data": "address.city" },
+           { "data": "address.country" }
         ]
     });
 
@@ -38,15 +43,20 @@ $(document).ready(function () {
     $('#remove').on('click', function(event) {
         var guest = tableHelper.getSelectedRowData();
         bootboxConfirm("Are you sure you want to delete this guest?", function(result){
-            removeGuest(guest, function() {
-                toastr.success('Removed "' + guest.firstName + ' ' + guest.lastName + '" from Guests!');
-                updateTable();
-            }, handleError);
+            if (result == true){
+                removeGuest(guest, function() {
+                    toastr.success('Removed "' + guest.firstName + ' ' + guest.lastName + '" from Guests!');
+                    updateTable();
+                },
+                handleError);
+            }
+            else{
+                $('#modal').modal('toggle');
+            }
         });
     });
     $('#guestForm').submit(function(event) {
         event.preventDefault();
-        $('#guestModal').modal('hide');
         if (edit) {
             handleEditFormSubmit();
         } else {
@@ -57,10 +67,12 @@ $(document).ready(function () {
 
 function handleCreateFormSubmit() {
     var data = getFormData();
+
     createGuest(data, function(result) {
         toastr.success('Added "' + data.firstName + ' ' + data.lastName + '" to Guests!');
         $('#guestForm').get(0).reset();
         updateTable();
+        $('#guestModal').modal('hide');
     }, handleError);
 }
 
@@ -69,25 +81,68 @@ function handleEditFormSubmit() {
     var data = getFormData();
     _.extend(guest, data);
     editGuest(guest, function(result) {
+        console.log("editing");
+        console.log(guest);
         toastr.success('Edited "' + data.firstName + ' ' + data.lastName + '"');
         $('#guestForm').get(0).reset();
         updateTable();
+        $('#guestModal').modal('hide');
         edit = false;
     }, handleError);
 }
-function handleError(error) {
-    toastr.error(JSON.parse(error.responseText).message);
-    console.log(error);
-};
 
-function createGuest(guest, successCallback, errorCallback) {
-    console.log("Creating guest..")
-    ajaxJsonCall('POST', '/api/guests/create', guest, successCallback, errorCallback);
-}
 
-function editGuest(guest, successCallback, errorCallback) {
+
+function createGuest(data, successCallback, errorCallback) {
+
+    var guest = {
+        firstName: $("#firstName").val(),
+        lastName: $("#lastName").val(),
+        email: $("#email").val(),
+        telephoneNumber: $("#telephoneNumber").val(),
+        address: {
+            street: $("#street").val(),
+            houseNumber: $("#houseNumber").val(),
+            postalCode: $("#postalCode").val(),
+            city: $("#city").val(),
+            country: $("#country").val()
+        }
+    };
+    ajaxJsonCall('POST', '/api/guests/create', guest, function (result) {
+        $('#guestModal').modal('hide');
+        toastr.success('Added "' + guest.firstName + ' ' + guest.lastName + '" to Guests!');
+        updateTable()}
+    , handleError);
+    };
+
+function editGuest(data, successCallback, errorCallback) {
     console.log("Editing guest..")
-    ajaxJsonCall('POST', '/api/guests/edit', guest, successCallback, errorCallback);
+    var editedAddress = {
+        street: data.street,
+        houseNumber: data.houseNumber,
+        postalCode: data.postalCode,
+        city: data.city,
+        country: data.country
+    };
+
+    var editedGuest = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        telephoneNumber: data.telephoneNumber
+    };
+
+    var address = tableHelper.getSelectedRowData().address;
+    _.extend(address, editedAddress);
+    var guest = tableHelper.getSelectedRowData();
+
+    ajaxJsonCall('POST', '/api/address/edit', address,
+        function(result) {
+            editedGuest.address = result;
+            _.extend(guest, editedGuest);
+
+            ajaxJsonCall('POST', '/api/guests/edit', guest, successCallback, errorCallback);
+    }, errorCallback);
 }
 
 function removeGuest(guest, successCallback, errorCallback) {
@@ -100,7 +155,12 @@ function getFormData() {
         firstName : $("#firstName").val(),
         lastName : $("#lastName").val(),
         email : $("#email").val(),
-        telephoneNumber : $("#telephoneNumber").val()
+        telephoneNumber : $("#telephoneNumber").val(),
+        street : $("#street").val(),
+        houseNumber : $("#houseNumber").val(),
+        postalCode : $("#postalCode").val(),
+        city : $("#city").val(),
+        country : $("#country").val()
     };
 }
 
@@ -109,6 +169,11 @@ function setFormData(guest) {
     $('#lastName').val(guest.lastName);
     $('#email').val(guest.email);
     $('#telephoneNumber').val(guest.telephoneNumber);
+    $("#street").val(guest.address.street);
+    $("#houseNumber").val(guest.address.houseNumber);
+    $("#postalCode").val(guest.address.postalCode);
+    $("#city").val(guest.address.city);
+    $("#country").val(guest.address.country);
 }
 
 function updateTable() {
@@ -116,7 +181,12 @@ function updateTable() {
 
     $('button.controls').prop('disabled', selectedId === undefined);
     ajaxJsonCall('GET', '/api/guests/', null, function(guests) {
-      table.clear();
-      table.rows.add(guests);
-      table.columns.adjust().draw();}, null)
+      tableHelper.dataTable.clear();
+      tableHelper.dataTable.rows.add(guests);
+      tableHelper.dataTable.columns.adjust().draw();}, null)
 }
+
+function handleError(error) {
+    toastr.error(JSON.parse(error.responseText).message);
+    console.log(error);
+};

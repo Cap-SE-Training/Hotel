@@ -15,24 +15,18 @@ $(document).ready(function () {
             { "data": "guests.0.firstName" },
             { "data": "guests.0.lastName" },
             //https://legacy.datatables.net/ref#mData
-            { "mData": function date(data, type, dataToSet) {
-                    return data.startDate.replace("T", " ");
-                }
+            {
+                "data": "startDate",
+                render: formatDateColumn
             },
-            { "mData": function date(data, type, dataToSet) {
-                    return data.endDate.replace("T", " ");
-                }
+            {
+                "data": "endDate",
+                render: formatDateColumn
             },
-            { "mData": function date(data, type, dataToSet) {
-                    return data.checkedIn.replace("T", " ");
-                }
-            },
-            { "mData": function date(data, type, dataToSet) {
-                    return data.checkedOut.replace("T", " ");
-                }
-            },
-            { "mData": function date(data, type, dataToSet) {
-                    return data.paid.replace("T", " ");
+            {
+                "data": null,
+                "mData": function ( source, type, val ) {
+                    return moment(source.endDate).diff(source.startDate, 'days') + ' days';
                 }
             },
             { "data": "paymentMethod" }
@@ -50,12 +44,12 @@ $('#remove').on('click', function(event) {
 });
 })
 
-function formatDate(date){
-    if(date){
-        return date.dayOfMonth + "-" + date.monthValue + "-" + date.year;
-    } else {
-        return null;
+function formatDateColumn(d) {
+    if (!d) {
+        return;
     }
+
+    return moment(d).format("DD/MM/YYYY");
 }
 
 function getBookings() {
@@ -65,10 +59,10 @@ function getBookings() {
         url:"/api/bookings/",
         type:"get",
         success: function(bookings) {
-            console.log("This is the data: " + bookings);
-            tableHelper.dataTable.clear();
-            tableHelper.dataTable.rows.add(bookings);
-            tableHelper.dataTable.columns.adjust().draw();
+            console.log("This is the data: ", bookings);
+            table.clear();
+            table.rows.add(bookings);
+            table.columns.adjust().draw();
         }
     });
 }

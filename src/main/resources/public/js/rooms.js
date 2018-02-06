@@ -4,7 +4,7 @@ var selectedId;
 var edit = false;
 
 $(document).ready(function() {
-    getRoomTypes(function(result) {
+   getRoomTypes(function(result) {
         result.forEach(function(roomType) {
             $('#type').append('<option value=' + roomType.id + '>' + roomType.type + '</option>');
             $('#filterType').append('<div onclick="tableHelper.dataTable.draw()"><label> <input type="checkbox" value="' + roomType.id
@@ -17,6 +17,7 @@ $(document).ready(function() {
                             + '" id="size-' + size + '" checked>' + size + '</label></div>');
         });
     });
+
     tableElement = $('#roomsTable');
     tableHelper = new DataTableHelper(tableElement, {
         bLengthChange: false,
@@ -55,7 +56,6 @@ $(document).ready(function() {
     });
     $('#roomForm').submit(function(event) {
         event.preventDefault();
-        $('#roomModal').modal('hide');
         if (edit) {
             handleEditFormSubmit();
         } else {
@@ -67,6 +67,7 @@ $(document).ready(function() {
 function handleCreateFormSubmit() {
     var data = getFormData();
     createRoom(data, function(result) {
+        $('#roomModal').modal('hide');
         toastr.success('Added "' + data.name + '" to Rooms!');
         $('#roomForm').get(0).reset();
         updateTable();
@@ -78,7 +79,8 @@ function handleEditFormSubmit() {
     var data = getFormData();
     _.extend(room, data);
     editRoom(room, function(result) {
-        toastr.success('Edited "' + data.name + '"');
+        $('#roomModal').modal('hide');
+        toastr.success('Edited "' + room.name + '"');
         $('#roomForm').get(0).reset();
         updateTable();
         edit = false;
@@ -99,11 +101,11 @@ function getFormData() {
 }
 
 function setFormData(room) {
-    $('#status').val();
-    $('#status option:eq(' + room.roomStatus + ')').prop('selected', true)
+    console.log(room);
+    $('#status option:eq("' + room.roomStatus + '")').prop('selected', true)
     $('#name').val(room.name);
     $('#number').val(room.number);
-    $('#type option:eq(' + room.roomType + ')').prop('selected', true)
+    $('#type').val(room.roomType.id);
     $('#size').val(room.size);
     $('#price').val(room.price);
 }
@@ -118,14 +120,7 @@ function getRoomTypes(successCallback, errorCallback) {
 }
 
 function getRoomSizes(successCallback, errorCallback) {
-    $.ajax({
-        contentType: 'application/json',
-        url: '/api/rooms/sizes',
-        type: 'GET',
-        dataType: 'json',
-        success: successCallback,
-        error: errorCallback
-    });
+    ajaxJsonCall('GET', '/api/rooms/sizes', null, successCallback, errorCallback);
 }
 
 function createRoom(room, successCallback, errorCallback) {
@@ -146,7 +141,8 @@ function updateTable() {
     ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
           tableHelper.dataTable.clear();
           tableHelper.dataTable.rows.add(rooms);
-          tableHelper.dataTable.columns.adjust().draw();}, null)
+          tableHelper.dataTable.columns.adjust().draw();
+      }, null);
 }
 
 $.fn.dataTable.ext.search.push(

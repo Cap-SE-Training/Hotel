@@ -2,21 +2,18 @@ package com.capgemini.setrack.controller;
 
 import com.capgemini.setrack.exception.InvalidModelException;
 import com.capgemini.setrack.exception.NotFoundException;
-import com.capgemini.setrack.model.Model;
 import com.capgemini.setrack.model.Room;
 import com.capgemini.setrack.repository.RoomRepository;
-import org.hibernate.exception.ConstraintViolationException;
+import com.capgemini.setrack.utility.ValidationUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.HttpStatus;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/rooms/")
@@ -37,7 +34,9 @@ public class RoomController {
             this.roomRepository.save(room);
             return room;
         } catch(DataIntegrityViolationException e){
-            throw new InvalidModelException("This room already exists!");
+            throw ValidationUtility.getInvalidModelException(e);
+        } catch(Exception e){
+            throw new InvalidModelException("Something went wrong!");
         }
     }
 
@@ -45,17 +44,50 @@ public class RoomController {
     public Room editRoom(@RequestBody Room room) throws InvalidModelException {
         room.validate();
 
-        this.roomRepository.save(room);
-        return room;
+        try {
+            this.roomRepository.save(room);
+            return room;
+        } catch(DataIntegrityViolationException e){
+            throw ValidationUtility.getInvalidModelException(e);
+        } catch(Exception e){
+            throw new InvalidModelException("Something went wrong!");
+        }
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
-    public void deleteRoom(@PathVariable long id) {
-        this.roomRepository.delete(id);
+    public void deleteRoom(@PathVariable long id) throws InvalidModelException, NotFoundException {
+        try{
+            this.roomRepository.delete(id);
+        } catch(DataIntegrityViolationException e) {
+            throw ValidationUtility.getInvalidModelException(e);
+        } catch(EmptyResultDataAccessException e){
+            throw new NotFoundException("There is no room with id " + id);
+        }
     }
 
     @RequestMapping(value = "sizes", method = RequestMethod.GET)
     public Iterable<Integer> getAllRoomSizes() {
         return roomRepository.findDistinctRoomSizes();
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.GET)
+    public Iterable<Room> getAvailableRooms(
+            @RequestParam("from") long from,
+            @RequestParam("to") long to,
+            @RequestParam(name="size", required=false) Integer size,
+            @RequestParam(name="room_type_id", required=false) Long room_type_id) {
+
+        LocalDateTime fromDate = new Timestamp(from).toLocalDateTime().minusHours(1);
+        LocalDateTime toDate = new Timestamp(to).toLocalDateTime().minusHours(1);
+
+        if(size == null && room_type_id == null){
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate);
+        } else if (size == null) {
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate, room_type_id);
+        } else if (room_type_id == null){
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate, size);
+        } else{
+            return this.roomRepository.findAvailableRoomsBetweenDates(fromDate, toDate, size, room_type_id);
+        }
     }
 }

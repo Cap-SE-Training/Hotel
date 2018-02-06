@@ -3,22 +3,24 @@ package com.capgemini.setrack.model;
 import com.capgemini.setrack.model.enums.RoomStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 import javax.persistence.*;
-import java.util.List;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+import java.util.Set;
 
 @Entity
+@Table( name="Room", uniqueConstraints= {
+        @UniqueConstraint(name = "UK_ROOM_NAME", columnNames = {"name"}),
+        @UniqueConstraint(name = "UK_ROOM_NUMBER", columnNames = {"number"})
+})
 public class Room extends Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="room_type_id")
+    @JoinColumn(name="room_type_id", foreignKey=@ForeignKey(name = "FK_ROOM_ROOMTYPE"))
     @NotNull(message="A room type is required!")
     private RoomType roomType;
 
@@ -27,12 +29,10 @@ public class Room extends Model {
 
     @NotNull(message="A name is required!")
     @Size(min=2, max=30, message="A name must be between 2 and 30 characters long!")
-    @Column(unique=true)
     private String name;
 
     @NotNull(message="A number is required!")
     @Size(min=1, message="A number is required")
-    @Column(unique=true)
     private String number;
 
     @NotNull(message="A size is required!")
@@ -44,11 +44,8 @@ public class Room extends Model {
     private double price;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "booking_room", joinColumns = {
-            @JoinColumn(name = "room_id", referencedColumnName = "id") }, inverseJoinColumns = {
-            @JoinColumn(name = "booking_id", referencedColumnName = "id") })
-    private List<Booking> bookings;
+    @ManyToMany(mappedBy = "rooms", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Booking> bookings;
 
     public Room(){}
 
@@ -61,11 +58,11 @@ public class Room extends Model {
         this.roomStatus = RoomStatus.AVAILABLE;
     }
 
-    public List<Booking> getBookings() {
+    public Set<Booking> getBookings() {
         return bookings;
     }
 
-    public void setBookings(List<Booking> bookings) {
+    public void setBookings(Set<Booking> bookings) {
         this.bookings = bookings;
     }
 
