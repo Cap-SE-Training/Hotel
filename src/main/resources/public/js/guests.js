@@ -100,6 +100,7 @@ function createGuest(data, successCallback, errorCallback) {
         lastName: $("#lastName").val(),
         email: $("#email").val(),
         telephoneNumber: $("#telephoneNumber").val(),
+        documentNumber: $("#documentNumber").val(),
         address: {
             street: $("#street").val(),
             houseNumber: $("#houseNumber").val(),
@@ -156,6 +157,7 @@ function getFormData() {
         lastName : $("#lastName").val(),
         email : $("#email").val(),
         telephoneNumber : $("#telephoneNumber").val(),
+        documentNumber: $("#documentNumber").val(),
         street : $("#street").val(),
         houseNumber : $("#houseNumber").val(),
         postalCode : $("#postalCode").val(),
@@ -169,6 +171,7 @@ function setFormData(guest) {
     $('#lastName').val(guest.lastName);
     $('#email').val(guest.email);
     $('#telephoneNumber').val(guest.telephoneNumber);
+    $("#documentNumber").val(guest.documentNumber),
     $("#street").val(guest.address.street);
     $("#houseNumber").val(guest.address.houseNumber);
     $("#postalCode").val(guest.address.postalCode);
