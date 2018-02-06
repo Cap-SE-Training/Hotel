@@ -1,8 +1,13 @@
+var tableHelper;
+var tableElement;
+var selectedId;
+
 $(document).ready(function () {
 
     getBookings();
 
-    table =  $('#table').DataTable({
+    tableElement = $('#table');
+    tableHelper =  new DataTableHelper(tableElement, {
         bLengthChange: false,
         rowId: 'id',
         columns: [
@@ -27,6 +32,24 @@ $(document).ready(function () {
             { "data": "paymentMethod" }
         ]
     });
+
+    $('#remove').on('click', function(event) {
+        var booking = tableHelper.getSelectedRowData();
+        bootboxConfirm("Are you sure you want to delete this booking?", function(result){
+            if (result == true){
+                removeBooking(booking, function() {
+                    console.log(booking.guests);
+                    toastr.success('Removed booking from "' + booking.guests[0].firstName + " " +
+                        booking.guests[0].lastName + '" from Bookings!');
+                    getBookings();
+                },
+                handleError);
+            }
+            else{
+                $('#modal').modal('toggle');
+            }
+        });
+    });
 });
 
 function formatDateColumn(d) {
@@ -45,9 +68,10 @@ function getBookings() {
         type:"get",
         success: function(bookings) {
             console.log("This is the data: ", bookings);
-            table.clear();
-            table.rows.add(bookings);
-            table.columns.adjust().draw();
+            $('button.controls').prop('disabled', selectedId === undefined);
+            tableHelper.dataTable.clear();
+            tableHelper.dataTable.rows.add(bookings);
+            tableHelper.dataTable.columns.adjust().draw();
         }
     });
 }
@@ -60,9 +84,14 @@ function postBooking() {
         type:"post",
         success: function(bookings) {
             console.log("This is the data: " + bookings);
-            table.clear();
-            table.rows.add(bookings);
-            table.columns.adjust().draw();
+            tableHelper.dataTable.clear();
+            tableHelper.dataTable.rows.add(bookings);
+            tableHelper.dataTable.columns.adjust().draw();
         }
     });
+}
+
+function removeBooking(booking, successCallback, errorCallback) {
+    console.log("Removing booking..")
+    ajaxJsonCall('DELETE', '/api/bookings/delete/' + booking.id, null, successCallback, errorCallback);
 }
