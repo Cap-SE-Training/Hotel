@@ -8,18 +8,21 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
+@Table(name="RoomType", uniqueConstraints= {
+        @UniqueConstraint(name = "UK_ROOMTYPE_TYPE", columnNames = {"type"})
+})
 public class RoomType {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy="roomType", cascade=CascadeType.ALL)
     @JsonIgnore
     private Set<Room> rooms;
 
     @NotNull(message="A type is required!")
     @Size(min=1, message="A type is required!")
-    @Column(unique=true)
     private String type;
 
     public RoomType(){}
