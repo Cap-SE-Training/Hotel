@@ -54,6 +54,7 @@ _.extend(Progress.prototype, {
             return;
         }
 
+        this.previousButton.show();
         this.steps[this.currentStep - 1].container.hide();
         this.currentStep++;
         this.steps[this.currentStep - 1].container.show();
@@ -61,7 +62,15 @@ _.extend(Progress.prototype, {
         this.setActive();
     },
     previous: function() {
-
+        if(this.currentStep <= 2){
+            this.previousButton.hide();
+        }
+        this.nextButton.attr('disabled', false);
+        this.steps[this.currentStep - 1].container.hide();
+        this.currentStep--;
+        this.steps[this.currentStep - 1].container.show();
+        this.steps[this.currentStep - 1].init();
+        this.setActive();
     },
     setActive: function() {
         var circles = $('.prog .circle');
