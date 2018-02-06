@@ -91,30 +91,29 @@ function handleEditFormSubmit() {
     }, handleError);
 }
 
-function createGuest(data, successCallback, errorCallback) {
-    console.log("Creating guest..")
 
-    var address = {
-        street: data.street,
-        houseNumber: data.houseNumber,
-        postalCode: data.postalCode,
-        city: data.city,
-        country: data.country
-    };
+
+function createGuest(data, successCallback, errorCallback) {
 
     var guest = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        telephoneNumber: data.telephoneNumber
+        firstName: $("#firstName").val(),
+        lastName: $("#lastName").val(),
+        email: $("#email").val(),
+        telephoneNumber: $("#telephoneNumber").val(),
+        address: {
+            street: $("#street").val(),
+            houseNumber: $("#houseNumber").val(),
+            postalCode: $("#postalCode").val(),
+            city: $("#city").val(),
+            country: $("#country").val()
+        }
     };
-
-    ajaxJsonCall('POST', '/api/address/create', address,
-        function(result) {
-            guest.address = result;
-            ajaxJsonCall('POST', '/api/guests/create', guest, successCallback, errorCallback);
-    }, errorCallback);
-}
+    ajaxJsonCall('POST', '/api/guests/create', guest, function (result) {
+        $('#guestModal').modal('hide');
+        toastr.success('Added "' + guest.firstName + ' ' + guest.lastName + '" to Guests!');
+        updateTable()}
+    , handleError);
+    };
 
 function editGuest(data, successCallback, errorCallback) {
     console.log("Editing guest..")
@@ -186,3 +185,8 @@ function updateTable() {
       tableHelper.dataTable.rows.add(guests);
       tableHelper.dataTable.columns.adjust().draw();}, null)
 }
+
+function handleError(error) {
+    toastr.error(JSON.parse(error.responseText).message);
+    console.log(error);
+};
