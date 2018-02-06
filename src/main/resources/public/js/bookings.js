@@ -32,7 +32,6 @@ $(document).ready(function () {
             { "data": "paymentMethod" }
         ]
     });
-
     $('#remove').on('click', function(event) {
         var booking = tableHelper.getSelectedRowData();
         bootboxConfirm("Are you sure you want to delete this booking?", function(result){
