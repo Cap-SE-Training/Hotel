@@ -1,3 +1,9 @@
 #guestsSelector {
     width: 100%;
 }
+#nextButton {
+    margin-top: 20px;
+}
+.btn-group {
+    margin-bottom: 20px;
+}
