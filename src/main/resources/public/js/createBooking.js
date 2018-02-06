@@ -6,7 +6,7 @@ var booking = {
 $('document').ready(function () {
     var progress = new Progress({
         container: $('#progressBar'),
-        previousButton: $('previousButton'),
+        previousButton: $('#previousButton'),
         nextButton: $('#nextButton'),
         finish: function() {
             ajaxJsonCall('POST', '/api/bookings/create', booking, function (result) {
@@ -71,6 +71,7 @@ $('document').ready(function () {
                 bInfo: false,
                 searching: false,
                 paging: false,
+                retrieve: true,
                 rowId: 'id',
                 columns: [
                     {
@@ -169,6 +170,7 @@ $('document').ready(function () {
                 bInfo: false,
                 searching: false,
                 paging: false,
+                retrieve: true,
                 rowId: 'id',
                 columnDefs: [ {
                     orderable: false,
@@ -197,7 +199,7 @@ $('document').ready(function () {
                     { "data": "price" }
                 ]
             }, true);
-            ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
+            ajaxJsonCall('GET', '/api/rooms/search?from=' + booking.startDate + '&to=' + booking.endDate, null, function(rooms) {
                 tableHelperRooms.dataTable.clear();
                 tableHelperRooms.dataTable.rows.add(rooms);
                 tableHelperRooms.dataTable.columns.adjust().draw();
