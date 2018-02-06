@@ -1,3 +1,7 @@
+var tableHelper;
+var tableElement;
+var selectedId;
+
 $(document).ready(function () {
 
     getBookings();
@@ -27,8 +31,6 @@ $(document).ready(function () {
             { "data": "paymentMethod" }
         ]
     });
-});
-
 function formatDateColumn(d) {
     if (!d) {
         return;
