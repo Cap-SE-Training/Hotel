@@ -18,7 +18,6 @@ public class RoomType {
 
     @JsonIgnore
     @OneToMany(mappedBy="roomType", cascade=CascadeType.ALL)
-    @JsonIgnore
     private Set<Room> rooms;
 
     @NotNull(message="A type is required!")
