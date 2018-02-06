@@ -11,3 +11,8 @@ function ajaxJsonCall(method, url, data, successCallback, errorCallback) {
     }
     $.ajax(options);
 }
+
+function handleError(error) {
+    toastr.error(JSON.parse(error.responseText).message);
+    console.log(error);
+};
