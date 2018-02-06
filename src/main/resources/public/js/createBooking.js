@@ -197,7 +197,7 @@ $('document').ready(function () {
                     { "data": "price" }
                 ]
             }, true);
-            ajaxJsonCall('GET', '/api/rooms/', null, function(rooms) {
+            ajaxJsonCall('GET', '/api/rooms/search?from=' + booking.startDate + '&to=' + booking.endDate, null, function(rooms) {
                 tableHelperRooms.dataTable.clear();
                 tableHelperRooms.dataTable.rows.add(rooms);
                 tableHelperRooms.dataTable.columns.adjust().draw();
